@@ -76,19 +76,22 @@ export function HalftoneOrd({
       mask.height = h;
       const m = mask.getContext("2d", { willReadFrequently: true });
       if (!m) return;
+      /* Måler på blekket, ikke tekstboksen, så serifer som stikker utenfor teller med. */
       m.font = `${vekt} 100px ${skrift}`;
-      const maalt = m.measureText(ord).width;
-      const str = maalt > 0 ? (w / maalt) * 100 : 0;
+      const prove = m.measureText(ord);
+      const blekk100 = (prove.actualBoundingBoxLeft || 0) + (prove.actualBoundingBoxRight || prove.width);
+      const str = blekk100 > 0 ? ((w * 0.985) / blekk100) * 100 : 0;
       m.font = `${vekt} ${str}px ${skrift}`;
       const box = m.measureText(ord);
+      const venstre = box.actualBoundingBoxLeft || 0;
+      const blekkB = venstre + (box.actualBoundingBoxRight || box.width);
       const cap = box.actualBoundingBoxAscent || str * 0.7;
       m.fillStyle = "#000";
       m.textBaseline = "alphabetic";
-      /* Ordet fyller bredden. Grunnlinjen legges så versalhøyden akkurat går inn i boksen. */
-      m.fillText(ord, (w - box.width) / 2, cap + (h - cap) / 2);
+      m.fillText(ord, (w - blekkB) / 2 + venstre, cap + (h - cap) / 2);
       const img = m.getImageData(0, 0, w, h).data;
 
-      const gap = Math.max(3, avstand);
+      const gap = Math.max(3, Math.min(avstand, w / 280));
       const cols = Math.ceil(w / gap);
       const rows = Math.ceil(h / gap);
       const tmp: number[] = [];
@@ -225,12 +228,20 @@ export function HalftoneOrd({
       if (synlig) vekk();
     });
     io.observe(root);
+    /* Ingenting i DOM bruker Nyght Serif på denne siden, så fonten må bes om
+       eksplisitt. Ellers tegnes ordet i reservefonten og måles feil. */
     let lever = true;
-    document.fonts?.ready.then(() => {
-      if (!lever) return;
-      layout();
-      vekk();
-    });
+    const fonter = document.fonts;
+    if (fonter) {
+      fonter
+        .load(`${vekt} 100px ${skrift}`)
+        .catch(() => undefined)
+        .then(() => {
+          if (!lever) return;
+          layout();
+          vekk();
+        });
+    }
     return () => {
       lever = false;
       cancelAnimationFrame(raf);
