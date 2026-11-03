@@ -43,6 +43,11 @@ export const kunder: Kunde[] = [
         navn: "Thon Hotel Oslo Airport",
         beskrivelse: "Produktmatrise og underlag",
       },
+      {
+        slug: "resepsjon",
+        navn: "Resepsjon og lobby",
+        beskrivelse: "Plan, materialer, inventar og belysning",
+      },
     ],
   },
   {

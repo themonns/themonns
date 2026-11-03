@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/intern/hyttebooking": ["./sider/intern-hyttebooking.html"],
     "/thon/osloairport": ["./sider/thon-osloairport.html"],
+    "/thon/resepsjon": ["./public/thon/resepsjon/_index.html"],
     "/vikaeiendomsforvaltning": ["./public/vikaeiendomsforvaltning/_index.html"],
     "/vikaeiendomsforvaltning/kirkegata": ["./public/vikaeiendomsforvaltning/kirkegata/_index.html"],
     "/eiendomsspar/tryvannstarnet": ["./public/eiendomsspar/tryvannstarnet/_index.html"],

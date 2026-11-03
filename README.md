@@ -7,7 +7,8 @@ themonns.no
 ├── intern/                    passord for ansatte
 │   └── hyttebooking
 ├── thon/                      passord Thon
-│   └── osloairport
+│   ├── osloairport
+│   └── resepsjon
 ├── eiendomsspar/              passord Eiendomsspar
 │   └── tryvannstarnet
 └── vikaeiendomsforvaltning/   passord Vika
@@ -60,6 +61,7 @@ Vercel viser de nøyaktige verdiene under Settings, Domains når du legger til `
 |---|---|---|
 | `/intern/hyttebooking` | themonns/hyttebooking | Redis, nøkler `skeikampen:*` |
 | `/thon/osloairport` | themonns/thonmatrise | Redis, nøkler `thon:edits` og `thon:logg` |
+| `/thon/resepsjon` | Presentasjon av resepsjon og lobby, THOA | Ingen |
 | `/vikaeiendomsforvaltning` | themonns/kirkegata15 (forsiden med alle eiendommene) | Ingen |
 | `/vikaeiendomsforvaltning/kirkegata` | themonns/kirkegata15 | Ingen |
 | `/eiendomsspar/tryvannstarnet` | themonns/tryvann | Ingen |
