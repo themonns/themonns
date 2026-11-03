@@ -9,6 +9,8 @@ export type Kunde = {
   navn: string;
   /** Navnet på miljøvariabelen som holder passordet, for eksempel PASSORD_THON */
   passordNokkel: string;
+  /** Sett når kunden har sin egen ferdige forside i public/<slug>/index.html */
+  egenForside?: boolean;
   prosjekter: Prosjekt[];
 };
 
@@ -51,6 +53,7 @@ export const kunder: Kunde[] = [
       {
         slug: "tryvannstarnet",
         navn: "Tryvannstårnet",
+        beskrivelse: "3D snitt, film og plantegninger",
       },
     ],
   },
@@ -58,10 +61,12 @@ export const kunder: Kunde[] = [
     slug: "vikaeiendomsforvaltning",
     navn: "Vika Eiendomsforvaltning",
     passordNokkel: "PASSORD_VIKA",
+    egenForside: true,
     prosjekter: [
       {
         slug: "kirkegata",
         navn: "Kirkegata 15",
+        beskrivelse: "Kontor, leietakere og tilpasning",
       },
     ],
   },

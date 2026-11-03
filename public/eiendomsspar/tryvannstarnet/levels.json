@@ -1,0 +1,342 @@
+{
+ "ground": 528.52,
+ "mast_top": 646.5,
+ "levels": [
+  {
+   "id": "mast",
+   "name": "Masten",
+   "kote": 646.5,
+   "group": "tarn",
+   "ifc": null,
+   "func": "Antennemasten, 118 meter over foten. Modellert i oppmålingsmodellen.",
+   "area": "",
+   "seats": "",
+   "plans": []
+  },
+  {
+   "id": "tak",
+   "name": "Tak tårnhus",
+   "kote": 593.8,
+   "group": "tarn",
+   "ifc": "Takplan",
+   "func": "Tak over utsiktsplattformen. Masten står på taket.",
+   "area": "",
+   "seats": "",
+   "plans": []
+  },
+  {
+   "id": "p15",
+   "name": "Plan 15",
+   "kote": 585.72,
+   "group": "tarn",
+   "ifc": "P15 Utsiktsplattform",
+   "func": "Utsiktsplattform, åpen for allmennheten",
+   "area": "",
+   "seats": "",
+   "title": "Utsiktsplattform",
+   "plans": [
+    [
+     "ia-20-116-plan-15-utsiktsplattform",
+     "Plan"
+    ]
+   ]
+  },
+  {
+   "id": "p14",
+   "name": "Plan 14",
+   "kote": 582.39,
+   "group": "servering",
+   "ifc": "P14",
+   "func": "Utsiktsrom og skybar, to alternativer",
+   "area": "",
+   "seats": "ca. 22 til 27 plasser",
+   "title": "Utsiktsrom og skybar",
+   "plans": [
+    [
+     "ia-20-114-plan-14-utsiktsrom-alt-1",
+     "Alt. 1"
+    ],
+    [
+     "ia-20-115-plan-14-utsiktsrom-alt-2",
+     "Alt. 2"
+    ]
+   ]
+  },
+  {
+   "id": "p13",
+   "name": "Plan 13",
+   "kote": 578.19,
+   "group": "servering",
+   "ifc": "P13",
+   "func": "Brasserie, to alternativer",
+   "area": "",
+   "seats": "",
+   "title": "Brasserie",
+   "plans": [
+    [
+     "ia-20-112-plan-13-brasserie-alt-1",
+     "Alt. 1"
+    ],
+    [
+     "ia-20-113-plan-13-brasserie-alt-2",
+     "Alt. 2"
+    ]
+   ]
+  },
+  {
+   "id": "p12",
+   "name": "Plan 12",
+   "kote": 573.99,
+   "group": "servering",
+   "ifc": "P12",
+   "func": "Kjøkken, tre alternativer, ett med chef's table",
+   "area": "",
+   "seats": "4 plasser ved chef's table",
+   "title": "Kjøkken",
+   "plans": [
+    [
+     "ia-20-109-plan-12-kjokken-alt-1",
+     "Alt. 1"
+    ],
+    [
+     "ia-20-110-plan-12-kjokken-alt-2",
+     "Alt. 2"
+    ],
+    [
+     "ia-20-111-plan-12-kjokken-alt-3",
+     "Alt. 3"
+    ]
+   ]
+  },
+  {
+   "id": "p11",
+   "name": "Plan 11",
+   "kote": 569.79,
+   "group": "servering",
+   "ifc": "P11",
+   "func": "Restaurant med roterende gulv, fire alternativer",
+   "area": "",
+   "seats": "",
+   "title": "Roterende restaurant",
+   "plans": [
+    [
+     "ia-20-105-plan-11-michelin-restaurant-med-roterende-gulv-alt-1",
+     "Alt. 1"
+    ],
+    [
+     "ia-20-106-plan-11-michelin-restaurant-med-roterende-gulv-alt-2",
+     "Alt. 2"
+    ],
+    [
+     "ia-20-107-plan-11-michelin-restaurant-med-roterende-gulv-alt-3",
+     "Alt. 3"
+    ],
+    [
+     "ia-20-108-plan-11-michelin-restaurant-med-roterende-gulv-alt-4",
+     "Alt. 4"
+    ]
+   ]
+  },
+  {
+   "id": "p10",
+   "name": "Plan 10",
+   "kote": 565.59,
+   "group": "overnatting",
+   "ifc": "P10",
+   "func": "Suite og møterom, to alternativer",
+   "area": "",
+   "seats": "",
+   "title": "Suite og møterom",
+   "plans": [
+    [
+     "ia-20-103-plan-10-suite-og-moterom-alt-1",
+     "Alt. 1"
+    ],
+    [
+     "ia-20-104-plan-10-suite-og-moterom-alt-2",
+     "Alt. 2"
+    ]
+   ]
+  },
+  {
+   "id": "p9",
+   "name": "Plan 9",
+   "kote": 561.44,
+   "group": "overnatting",
+   "ifc": "P09 Gard./WC",
+   "func": "Suite med regndusj og kulp, to alternativer",
+   "area": "",
+   "seats": "2 suiter",
+   "title": "Suite",
+   "plans": [
+    [
+     "ia-20-101-plan-9-suite-alt-1",
+     "Alt. 1"
+    ],
+    [
+     "ia-20-102-plan-9-suite-alt-2",
+     "Alt. 2"
+    ]
+   ]
+  },
+  {
+   "id": "p8",
+   "name": "Plan 8",
+   "kote": 557.24,
+   "group": "teknisk",
+   "ifc": "P08 Teknisk",
+   "func": "Teknisk, ventilasjon",
+   "area": "",
+   "seats": "",
+   "title": "Teknisk",
+   "plans": []
+  },
+  {
+   "id": "sjakt",
+   "name": "Plan 3 til 7",
+   "kote": 536.24,
+   "kote_top": 553.04,
+   "group": "tarn",
+   "ifc": [
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07"
+   ],
+   "func": "Betongsøylen med heis og trapp. Ny rømningsvei er det som åpner tårnet igjen.",
+   "area": "",
+   "seats": "",
+   "title": "Sjakten",
+   "plans": [
+    [
+     "aksonometri-1",
+     "Aksonometri"
+    ]
+   ]
+  },
+  {
+   "id": "p2",
+   "name": "Plan 2",
+   "kote": 532.04,
+   "group": "servering",
+   "ifc": "P02",
+   "func": "Takterrasse med uteservering, kiosk og ventilasjonshus",
+   "area": "ca. 235 m²",
+   "seats": "ca. 176 plasser",
+   "title": "Takterrasse",
+   "plans": [
+    [
+     "oversikt-1-u1-u2-u3",
+     "Oversikt"
+    ]
+   ]
+  },
+  {
+   "id": "p1",
+   "name": "Plan 1",
+   "kote": 528.52,
+   "group": "servering",
+   "ifc": "P01",
+   "func": "Hovedinngang, restaurant, kafé og chambre, kjøkken, uteservering, venteareal, linkhytte med atelier",
+   "area": "restaurant 330 m², kjøkken 173 m², uteservering 458 m²",
+   "seats": "ca. 362 plasser inne og ute",
+   "title": "Bakkeplan",
+   "plans": [
+    [
+     "plan-1",
+     "Plan 1"
+    ],
+    [
+     "oversikt-1-u1-u2-u3",
+     "Oversikt"
+    ]
+   ]
+  },
+  {
+   "id": "u1",
+   "name": "Plan U1",
+   "kote": 527.23,
+   "group": "tarn",
+   "ifc": "PU1",
+   "func": "Resepsjon, lounge og utsalg. Her starter turen opp i tårnet.",
+   "area": "ca. 445 m², takhøyde 3,6 m",
+   "seats": "ca. 55 plasser",
+   "title": "Resepsjon og lounge",
+   "plans": [
+    [
+     "plan-u1",
+     "Plan U1"
+    ],
+    [
+     "oversikt-1-u1-u2-u3",
+     "Oversikt"
+    ]
+   ]
+  },
+  {
+   "id": "u2",
+   "name": "Plan U2",
+   "kote": 525.17,
+   "group": "aktivitet",
+   "ifc": "PU2",
+   "func": "Klatresenter i fjellhallen",
+   "area": "ca. 400 m², takhøyde opptil 6,2 m",
+   "seats": "",
+   "title": "Klatresenter",
+   "plans": [
+    [
+     "plan-u2",
+     "Plan U2"
+    ],
+    [
+     "oversikt-1-u1-u2-u3",
+     "Oversikt"
+    ]
+   ]
+  },
+  {
+   "id": "u3",
+   "name": "Plan U3",
+   "kote": 521.9,
+   "group": "aktivitet",
+   "ifc": "PU3",
+   "func": "Aktivitetshaller, escape rooms og egen resepsjon. Tunnel med kjøreport ca. 100 meter øst for tårnet.",
+   "area": "ca. 855 m², takhøyde 2,9 til 9,0 m",
+   "seats": "",
+   "title": "Aktivitetshallene",
+   "plans": [
+    [
+     "plan-u3",
+     "Plan U3"
+    ],
+    [
+     "oversikt-1-u1-u2-u3",
+     "Oversikt"
+    ]
+   ]
+  }
+ ],
+ "groups": {
+  "servering": {
+   "label": "Servering",
+   "color": "#b4732e"
+  },
+  "tarn": {
+   "label": "Tårn, billett og resepsjon",
+   "color": "#5a4d44"
+  },
+  "overnatting": {
+   "label": "Overnatting og møter",
+   "color": "#a35a3a"
+  },
+  "aktivitet": {
+   "label": "Aktivitet i fjellet",
+   "color": "#4f8a73"
+  },
+  "teknisk": {
+   "label": "Teknisk",
+   "color": "#8c8378"
+  }
+ }
+}

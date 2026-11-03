@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Vika Eiendomsforvaltning</title>
+<meta name="description" content="Eiendommene til Vika Eiendomsforvaltning i Oslo. Velg en eiendom på kartet for å se mer.">
+<link rel="icon" href="img/vika-logo.svg" type="image/svg+xml">
+<link rel="preload" href="kirkegata/fonts/Switzer-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="kirkegata/fonts/NyghtSerif-Light.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+<style>
+@font-face{font-family:Switzer;src:url(kirkegata/fonts/Switzer-Variable.woff2) format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Nyght Serif";src:url(kirkegata/fonts/NyghtSerif-Light.woff2) format("woff2");font-weight:300;font-display:swap}
+:root{--paper:#F2F1EE;--stone:#E6E4DF;--ink:#1B1C1E;--ink-2:#5F5B55;--rule:#D9D6D0;--vika:#0A5D66;--on-vika:#F2F1EE;--lime:#CFDE00;--r:4px;--gap:clamp(16px,2.4vw,32px);--soft:cubic-bezier(.22,1,.36,1);color-scheme:light}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--paper);color:var(--ink);font:400 16px/1.5 Switzer,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+#map{position:fixed;inset:0;background:var(--stone)}
+/* the logo and the list float over the map as quiet paper panels */
+.top{position:fixed;left:var(--gap);top:var(--gap);z-index:3;background:var(--paper);padding:14px 18px;border-radius:var(--r);display:block}
+.top img{height:34px;width:auto;display:block}
+.list{position:fixed;left:var(--gap);top:calc(var(--gap) + 74px);bottom:var(--gap);z-index:3;width:min(380px,calc(100vw - 32px));background:var(--paper);border-radius:var(--r);display:flex;flex-direction:column;overflow:hidden}
+.list .hd{padding:20px 20px 12px}
+.list h1{font-family:"Nyght Serif",Georgia,serif;font-weight:300;font-size:clamp(30px,3vw,40px);line-height:1.02;letter-spacing:-.01em;margin:0}
+.list p.sub{margin:8px 0 0;color:var(--ink-2);font-size:15px}
+.list .sc{overflow-y:auto;overscroll-behavior:contain;padding:0 20px 8px;flex:1}
+.list h3{margin:14px 0 0;padding:0 0 6px;font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);border-bottom:1px solid var(--rule)}
+.list ul{list-style:none;margin:0;padding:0}
+.list li+li{border-top:1px solid var(--rule)}
+.list button{all:unset;box-sizing:border-box;width:100%;display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 0;cursor:pointer}
+.list .dt{width:10px;height:10px;border-radius:50%;background:var(--vika)}
+.list .own .dt{background:var(--lime);box-shadow:0 0 0 2px var(--vika)}
+.list b{display:block;font-weight:500;font-size:16px}
+.list small{display:block;color:var(--ink-2);font-size:13px}
+.list .go{font-size:13px;color:var(--ink-2);transition:transform .4s var(--soft)}
+.list button:hover .go,.list button[aria-current="true"] .go{transform:translateX(3px);color:var(--ink)}
+.list button[aria-current="true"] b{color:var(--vika)}
+.list button:focus-visible{outline:2px solid var(--vika);outline-offset:2px}
+.list .ft{padding:10px 20px 14px;border-top:1px solid var(--rule);font-size:12px;color:var(--ink-2)}
+/* the marker: a teal dot, the name beside it when there is room or when chosen */
+.pin{all:unset;position:absolute;box-sizing:border-box;display:flex;align-items:center;gap:8px;cursor:pointer}
+.pin i{width:14px;height:14px;border-radius:50%;background:var(--vika);border:2px solid var(--paper);box-shadow:0 1px 4px rgba(27,28,30,.3);transition:transform .5s var(--soft)}
+.pin.own i{width:18px;height:18px;background:var(--lime);border-color:var(--vika)}
+.pin span{display:none;background:var(--paper);color:var(--ink);font:500 13px/1 Switzer,system-ui,sans-serif;padding:7px 10px;border-radius:3px;white-space:nowrap;box-shadow:0 2px 10px rgba(27,28,30,.12)} /* taste-skill-ignore: a label pinned on the map */
+.pin:hover,.pin.on,.pin:focus-visible{z-index:5}
+.pin:hover span,.pin.on span,.pin:focus-visible span,.near .pin:not(.stack) span,.pin.own span{display:block}
+.pin:hover i,.pin.on i{transform:scale(1.2)}
+.pin:focus-visible span{outline:2px solid var(--vika);outline-offset:2px}
+/* the card for a chosen property */
+.card{position:fixed;right:var(--gap);top:var(--gap);z-index:4;width:min(400px,calc(100vw - 32px));max-height:calc(100svh - 2 * var(--gap));overflow-y:auto;background:var(--paper);border-radius:var(--r);opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .5s ease,transform .6s var(--soft)}
+.card.show{opacity:1;transform:none;pointer-events:auto}
+.card figure{margin:0;aspect-ratio:16/10;background:var(--stone)}
+.card figure img{width:100%;height:100%;object-fit:cover;display:block}
+.card .in{padding:20px 22px 22px}
+.card .grp{margin:0 0 8px;font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--vika)}
+.card h2{font-family:"Nyght Serif",Georgia,serif;font-weight:300;font-size:clamp(30px,3vw,40px);line-height:1.02;margin:0}
+.card .addr{margin:6px 0 0;color:var(--ink-2);font-size:15px}
+.card .kind{margin:16px 0 0;font-weight:500;font-size:15px}
+.card .sum{margin:6px 0 0;font-size:15px;line-height:1.55}
+.card dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px;margin:18px 0 0}
+.card dl div{border-top:1px solid var(--rule);padding-top:8px}
+.card dt{font-size:12px;color:var(--ink-2)}
+.card dd{margin:2px 0 0;font-size:15px;line-height:1.35}
+.card .acts{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px}
+.card .src{margin:16px 0 0;font-size:12px;color:var(--ink-2)}
+.btn{display:inline-flex;align-items:center;gap:10px;min-height:46px;padding:12px 22px;border-radius:999px;background:var(--vika);color:var(--on-vika);text-decoration:none;font-weight:500;font-size:15px}
+.btn:focus-visible,.x:focus-visible{outline:2px solid var(--vika);outline-offset:3px}
+.x{all:unset;cursor:pointer;font-size:14px;color:var(--ink-2);padding:8px 0}
+.x:hover{color:var(--ink)}
+.maplibregl-ctrl-attrib{font:11px/1.4 Switzer,system-ui,sans-serif!important;background:rgba(242,241,238,.85)!important}
+@media (max-width:700px){
+  .top{padding:10px 14px}
+  .top img{height:26px}
+  .list{top:auto;bottom:16px;max-height:44svh}
+  .list .hd{padding:16px 16px 8px}
+  .list .sc{padding:0 16px 6px}
+  .list .ft{padding:8px 16px 12px}
+  .card{left:16px;right:16px;top:auto;bottom:16px;width:auto;max-height:70svh}
+  .card figure{aspect-ratio:16/8}
+  .card.show~.list{opacity:0;pointer-events:none}
+}
+@media (prefers-reduced-motion:reduce){.card,.pin i,.list .go{transition:none}}
+</style>
+</head>
+<body>
+<header class="top"><img src="img/vika-logo.svg" alt="Vika Eiendomsforvaltning" width="78" height="34"></header>
+
+<div id="map" role="region" aria-label="Kart over Oslo med eiendommene"></div>
+
+<aside class="card" id="card" aria-live="polite"></aside>
+
+<nav class="list" aria-labelledby="lsT">
+  <div class="hd">
+    <h1 id="lsT">Eiendommene</h1>
+    <p class="sub" id="lsSub">Velg en eiendom på kartet eller i listen.</p>
+  </div>
+  <div class="sc" id="ls"></div>
+  <p class="ft">Nettside utviklet av Monn</p>
+</nav>
+
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script>
+// Vika Eiendomsforvaltning's properties, facts from vika-eiendom.no (fetched 20 October 2026). Kirkegata 15 opens its own site.
+const BUILDINGS = [{"id": "kirkegaten-15", "name": "Kirkegata 15", "group": "Kvadraturen", "addr": "Kirkegata 15, 0153 Oslo", "kind": "Kontor, butikk og servering, ca. 19 000 m²", "summary": "På hjørnet av Kirkegata og Tollbugata. Kontor i 2. til 9. etasje rundt et atrium med felles kantine, og butikker, restaurant og kafé på gateplan.", "facts": [["Areal", "ca. 19 000 m²"], ["Kontor", "2. til 9. etasje"], ["Gateplan", "Butikk, restaurant og kafé"], ["Rehabilitert", "Inngang 2015, 5. til 9. etasje 2017"]], "href": "kirkegata/", "lat": 59.91017, "lng": 10.74344, "short": null, "img": "kirkegata/img/hero-broer.webp", "label": "Se Kirkegata 15", "own": true}, {"id": "radhusgaten-17", "name": "Rådhusgaten 17", "group": "Kvadraturen", "addr": "Rådhusgata 17, 0158 Oslo", "kind": "Næringsbygg, ca. 3 900 m² BTA", "summary": "Øverst i Rådhusgata, med grøntområdet rundt Akershus festning rett utenfor inngangen. Oppført i 1939 og nyrehabilitert i 2022.", "facts": [["Areal", "ca. 3 900 m² BTA"], ["Etasjer", "8 over underetasje"], ["Bygget", "1939"], ["Rehabilitert", "2022"]], "href": "https://www.vika-eiendom.no/property/radhusgaten-17/", "lat": 59.91001, "lng": 10.74093, "short": null, "label": "Se eiendommen hos Vika", "own": false}, {"id": "dronning-maudsgate-10", "name": "Dronning Mauds gate 10", "group": "Vika", "addr": "Dronning Mauds gate 10, 0250 Oslo", "kind": "Næringsbygg, ca. 13 000 m²", "summary": "Del av Vestre Vika sammen med tvillingbygget Dronning Mauds gate 11 og Vestre Vika P-hus. Totalrehabilitert med påbygg og klar for nye leietakere i 2019. Personalrestaurant, dusj og garderobe, sykkelparkering og direkte adkomst til P-huset.", "facts": [["Areal", "ca. 13 000 m²"], ["Bygget", "1968"], ["Rehabilitert", "2019, med påbygg"], ["Parkering", "Direkte til Vestre Vika P-hus"]], "href": "https://www.vika-eiendom.no/property/dronning-maudsgate-10/", "lat": 59.91285, "lng": 10.72749, "short": null, "label": "Se eiendommen hos Vika", "own": false}, {"id": "dronning-mauds-gate-11", "name": "Dronning Mauds gate 11", "group": "Vika", "addr": "Dronning Mauds gate 11, 0250 Oslo", "kind": "Næringsbygg, ca. 11 000 m²", "summary": "Tvillingbygget til Dronning Mauds gate 10 i Vestre Vika. Totalrehabilitert med påbygg og klar for nye leietakere i 2017. Personalrestaurant, dusj og garderobe, sykkelparkering og direkte adkomst til Vestre Vika P-hus.", "facts": [["Areal", "ca. 11 000 m²"], ["Bygget", "1968"], ["Rehabilitert", "2017, med påbygg"], ["Parkering", "Direkte til Vestre Vika P-hus"]], "href": "https://www.vika-eiendom.no/property/dronning-mauds-gate-11/", "lat": 59.91318, "lng": 10.7275, "short": null, "label": "Se eiendommen hos Vika", "own": false}, {"id": "vestre-vika-p-hus", "name": "Vestre Vika P-hus", "group": "Vika", "addr": "Ved Dronning Mauds gate og Munkedamsveien", "kind": "Parkeringshus", "summary": "Helautomatisk parkering med skiltgjenkjenning, der man betaler for tiden bilen står. Leieparkering knyttes til bilens registreringsnummer. Direkte adkomst fra Dronning Mauds gate 10 og 11.", "facts": [["Innkjøring", "Fra Munkedamsveien"], ["Betaling", "Skiltgjenkjenning"]], "href": "https://www.vika-eiendom.no/property/vestre-vika-p-hus/", "lat": 59.9129, "lng": 10.72852, "short": null, "label": "Se eiendommen hos Vika", "own": false}, {"id": "klingenberggaten-7", "name": "Klingenberggaten 7", "group": "Vika", "addr": "Klingenberggaten 7 A og B, 0161 Oslo", "kind": "Næringsbygg, ca. 9 500 m² BTA", "summary": "Kort vei til Aker Brygge. Bygget i 1940 og senere totalrehabilitert, med butikk og service på gateplan og dusj, garderobe og sykkelparkering i underetasjen.", "facts": [["Areal", "ca. 9 500 m² BTA"], ["Etasjer", "9"], ["Bygget", "1940"], ["Gateplan", "Butikk og service"]], "href": "https://www.vika-eiendom.no/property/klingenberggaten-7/", "lat": 59.91353, "lng": 10.73174, "short": null, "label": "Se eiendommen hos Vika", "own": false}, {"id": "klingenberggaten-5", "name": "Klingenberggaten 5", "group": "Vika", "addr": "Klingenberggaten 5, 0161 Oslo", "kind": "Næringsbygg, ca. 6 000 m² BTA", "summary": "Kort vei til Aker Brygge. Bygget i 1938 og senere totalrehabilitert, med serveringssteder på gateplan.", "facts": [["Areal", "ca. 6 000 m² BTA"], ["Etasjer", "9"], ["Bygget", "1938"], ["Gateplan", "Servering"]], "href": "https://www.vika-eiendom.no/property/klingenberggaten-5/", "lat": 59.91361, "lng": 10.73217, "short": null, "label": "Se eiendommen hos Vika", "own": false}, {"id": "hegdehaugsveien-31", "name": "Hegdehaugsveien 31", "group": "Hegdehaugen og Frogner", "addr": "Hegdehaugsveien 31, 0352 Oslo", "kind": "Kontor, handel og servering, 8 000 m²", "summary": "I krysset Hegdehaugsveien og Oscars gate. Kontorbygg fra 1958, betydelig oppgradert, med dagligvare, kaffebar og restaurant på gateplan. 6 til 8 minutter å gå til Nationaltheatret og Majorstuen T, og buss og trikk like ved.", "facts": [["Areal", "8 000 m²"], ["Kontor", "7 etasjer"], ["Bygget", "1958"], ["Gateplan", "Dagligvare, kaffebar og restaurant"]], "href": "https://www.vika-eiendom.no/property/hegdehaugsveien-31/", "lat": 59.92187, "lng": 10.72735, "short": null, "label": "Se eiendommen hos Vika", "own": false}, {"id": "frognerveien-22", "name": "Frognerveien 22", "group": "Hegdehaugen og Frogner", "addr": "Frognerveien 22, 0263 Oslo", "kind": "Kontor og bolig, 3 700 m²", "summary": "I krysset Frognerveien og Lille Frogner. Bygget i 1964, med nyrenovert fasade, kontor i 1. til 3. etasje og tre etasjer med leiligheter.", "facts": [["Areal", "3 700 m²"], ["Kontor", "1. til 3. etasje"], ["Bolig", "Tre etasjer"], ["Bygget", "1964"]], "href": "https://www.vika-eiendom.no/property/frognerveien-22/", "lat": 59.91798, "lng": 10.71195, "short": null, "label": "Se eiendommen hos Vika", "own": false}, {"id": "sandakerveien-114-a", "name": "Sandakerveien 114 A", "group": "Nydalen og Storo", "addr": "Sandakerveien 114 A, 0484 Oslo", "kind": "Næringsbygg, 5 800 m² BTA", "summary": "Midt mellom Nydalen og Storo, med kort vei til Ring 3. Nye fasader, inngangsparti og uteområder de senere årene. Kantine i 6. etasje, dusj, garderobe og sykkelparkering.", "facts": [["Areal", "5 800 m² BTA"], ["Etasjer", "6"], ["Kantine", "6. etasje"]], "href": "https://www.vika-eiendom.no/property/sandakerveien-114-a/", "lat": 59.94737, "lng": 10.77025, "short": "114 A", "label": "Se eiendommen hos Vika", "own": false}, {"id": "sandakerveien-114-b", "name": "Sandakerveien 114 B", "group": "Nydalen og Storo", "addr": "Sandakerveien 114 B, 0484 Oslo", "kind": "Næringsbygg, ca. 4 700 m² BTA", "summary": "Nærmeste nabo til Handelshøyskolen BI. Nye fasader, inngangsparti og uteområder de senere årene. Eget P-hus ved siden av og besøksparkering utenfor.", "facts": [["Areal", "ca. 4 700 m² BTA"], ["Etasjer", "6"], ["Parkering", "Eget P-hus og besøksplasser"]], "href": "https://www.vika-eiendom.no/property/sandakerveien-114-b/", "lat": 59.94737, "lng": 10.77025, "short": "114 B", "label": "Se eiendommen hos Vika", "own": false}, {"id": "sandakerveien-114-p-hus", "name": "Sandakerveien 114 P-hus", "group": "Nydalen og Storo", "addr": "Ved Sandakerveien 114 A og B", "kind": "Parkeringshus, 111 plasser", "summary": "Rett ved siden av Sandakerveien 114 A og B. Parkeringshuset er leid ut til en parkeringsoperatør.", "facts": [["Plan 1", "84 plasser, 5 med elbillading"], ["Kjeller", "14 abonnementsplasser"], ["Ute", "13 besøksplasser mot Nydalen allé"]], "href": "https://www.vika-eiendom.no/property/sandakerveien-114-p-hus/", "lat": 59.94737, "lng": 10.77025, "short": "P-hus", "label": "Se eiendommen hos Vika", "own": false}];
+const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const card = document.getElementById('card'), ls = document.getElementById('ls');
+const WIDE = () => innerWidth > 700;
+let map = null, pins = {};
+
+document.getElementById('lsSub').textContent = `${BUILDINGS.length} eiendommer i Oslo. Velg en på kartet eller i listen.`;
+
+// the list, grouped by area in the order Vika lists them
+const groups = [...new Set(BUILDINGS.map(b => b.group))];
+ls.innerHTML = groups.map(g => `<h3>${esc(g)}</h3><ul>${BUILDINGS.filter(b => b.group === g).map(b =>
+  `<li><button type="button" data-id="${b.id}" class="${b.own ? 'own' : ''}"><span class="dt" aria-hidden="true"></span><span><b>${esc(b.name)}</b><small>${esc(b.kind)}</small></span><span class="go" aria-hidden="true">Se</span></button></li>`).join('')}</ul>`).join('');
+
+function open(id) {
+  const b = BUILDINGS.find(x => x.id === id); if (!b) return;
+  const ext = !b.own;
+  card.innerHTML = `${b.img ? `<figure><img src="${b.img}" alt=""></figure>` : ''}<div class="in">
+    <p class="grp">${esc(b.group)}</p><h2>${esc(b.name)}</h2><p class="addr">${esc(b.addr)}</p>
+    <p class="kind">${esc(b.kind)}</p><p class="sum">${esc(b.summary)}</p>
+    <dl>${b.facts.map(([t, v]) => `<div><dt>${esc(t)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+    <div class="acts"><a class="btn" href="${b.href}"${ext ? ' target="_blank" rel="noopener"' : ''}>${esc(b.label)}${ext ? ' <span aria-hidden="true">↗</span><span class="vh" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">(åpnes i ny fane)</span>' : ''}</a><button class="x" type="button" id="cardX">Lukk</button></div>
+    ${ext ? '<p class="src">Fakta fra vika-eiendom.no, hentet 20. oktober 2026.</p>' : ''}</div>`;
+  card.classList.add('show');
+  card.scrollTop = 0;
+  ls.querySelectorAll('button').forEach(x => x.setAttribute('aria-current', String(x.dataset.id === id)));
+  Object.entries(pins).forEach(([k, el]) => el.classList.toggle('on', k === id));
+  if (map) map.flyTo({ center: [b.lng, b.lat], zoom: 16.2, pitch: 50, bearing: -20, offset: WIDE() ? [-60, 0] : [0, -140], duration: REDUCE ? 0 : 2200, essential: true });
+  document.getElementById('cardX').addEventListener('click', close);
+}
+function close() {
+  card.classList.remove('show');
+  Object.values(pins).forEach(el => el.classList.remove('on'));
+  ls.querySelectorAll('button').forEach(x => x.setAttribute('aria-current', 'false'));
+  if (map) fitAll(REDUCE ? 0 : 1600);
+}
+ls.addEventListener('click', e => { const b = e.target.closest('[data-id]'); if (b) open(b.dataset.id); });
+addEventListener('keydown', e => { if (e.key === 'Escape' && card.classList.contains('show')) close(); });
+
+// all properties in view, clear of the list panel
+function fitAll(duration) {
+  const bb = new maplibregl.LngLatBounds();
+  BUILDINGS.forEach(b => bb.extend([b.lng, b.lat]));
+  const g = WIDE() ? 60 : 30;
+  const pad = WIDE() ? { top: g, bottom: g, right: g, left: 380 + 2 * g } : { top: 80, bottom: innerHeight * .46, left: g, right: g };
+  map.fitBounds(bb, { padding: pad, pitch: 0, bearing: 0, duration, maxZoom: 14 });
+}
+
+// the map: a quiet, light Oslo with the properties as teal dots. Without the map the list still opens them.
+try {
+  map = new maplibregl.Map({ container: 'map', style: 'https://tiles.openfreemap.org/styles/positron', center: [10.745, 59.925], zoom: 11.6, attributionControl: { compact: true } });
+  map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
+  map.scrollZoom.setWheelZoomRate(1 / 600);
+  // properties sharing one address point sit side by side so each stays clickable
+  const seen = {};
+  BUILDINGS.forEach(b => {
+    const key = `${b.lat},${b.lng}`;
+    const same = BUILDINGS.filter(x => `${x.lat},${x.lng}` === key);
+    const i = (seen[key] = (seen[key] ?? -1) + 1);
+    const el = document.createElement('button');
+    el.type = 'button'; el.className = 'pin' + (b.own ? ' own' : '') + (same.length > 1 ? ' stack' : '');
+    el.setAttribute('aria-label', `Åpne ${b.name}`);
+    el.innerHTML = `<i></i><span>${esc(b.name)}</span>`;
+    el.addEventListener('click', () => open(b.id));
+    pins[b.id] = el;
+    new maplibregl.Marker({ element: el, anchor: 'left', offset: [-8 + (i - (same.length - 1) / 2) * 16, 0] }).setLngLat([b.lng, b.lat]).addTo(map);
+  });
+  const near = () => document.body.classList.toggle('near', map.getZoom() >= 16);
+  map.on('zoom', near);
+  map.on('load', () => {
+    // muted to paper and stone
+    const set = (layer, prop, val) => { try { map.setPaintProperty(layer, prop, val); } catch (e) {} };
+    map.getStyle().layers.forEach(l => {
+      if (l.type === 'background') set(l.id, 'background-color', '#ECEAE5');
+      if (l.type === 'fill' && /water/.test(l.id)) set(l.id, 'fill-color', '#D5DCD8');
+      if (l.type === 'fill' && /park|landcover|grass|wood/.test(l.id)) set(l.id, 'fill-color', '#E1E3DA');
+    });
+    fitAll(REDUCE ? 0 : 2000);
+  });
+} catch (e) { document.getElementById('map').style.background = 'var(--stone)'; }
+</script>
+</body>
+</html>

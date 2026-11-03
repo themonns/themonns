@@ -60,6 +60,11 @@ Vercel viser de nøyaktige verdiene under Settings, Domains når du legger til `
 |---|---|---|
 | `/intern/hyttebooking` | themonns/hyttebooking | Redis, nøkler `skeikampen:*` |
 | `/thon/osloairport` | themonns/thonmatrise | Redis, nøkler `thon:edits` og `thon:logg` |
+| `/vikaeiendomsforvaltning` | themonns/kirkegata15 (forsiden med alle eiendommene) | Ingen |
+| `/vikaeiendomsforvaltning/kirkegata` | themonns/kirkegata15 | Ingen |
+| `/eiendomsspar/tryvannstarnet` | themonns/tryvann | Ingen |
+
+Vika, Kirkegata og Tryvann er statiske nettsteder som ligger urørt i `public/<kunde>/<prosjekt>/`. Forsiden deres heter `_index.html` (ikke `index.html`, ellers går den utenom tilgangen) og serveres av `app/<kunde>/<prosjekt>/route.ts`. Alle mappeadresser ender med skråstrek (`trailingSlash` i `next.config.ts`), så de relative stiene i sidene virker.
 
 Begge hadde egen innlogging før. Den er tatt ut, forsiden her dekker det. Thon matrisen spør etter navn første gang, siden navnet vises når noen fjerner et produkt. De gamle Vercel prosjektene kan slettes når domenet er over, men vent til databasen er koblet til her.
 
@@ -69,7 +74,7 @@ Begge hadde egen innlogging før. Den er tatt ut, forsiden her dekker det. Thon 
 
 ## Fonter
 
-Fellix ligger i `public/fonts/`. Legg Nyght Serif der også, som `NyghtSerif-Light.woff2` og `NyghtSerif-Regular.woff2`, så tas den i bruk uten andre endringer. Til da brukes en lignende serif.
+Fellix og Nyght Serif ligger i `public/fonts/` og brukes på hele siden.
 
 ## Lokalt
 
