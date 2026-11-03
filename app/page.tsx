@@ -1,5 +1,6 @@
 import styles from "./page.module.css";
 import { LoggInnSkjema } from "./LoggInnSkjema";
+import { HalftoneOrd } from "./HalftoneOrd";
 
 export default async function Forside({ searchParams }: PageProps<"/">) {
   const params = await searchParams;
@@ -14,7 +15,7 @@ export default async function Forside({ searchParams }: PageProps<"/">) {
       </header>
 
       <section className={styles.midt}>
-        <h1 className={styles.ord}>Monn</h1>
+        <HalftoneOrd ord="Monn" className={styles.ord} />
         <div className={styles.rad}>
           <LoggInnSkjema til={til} />
           <p className={styles.hjelp}>
