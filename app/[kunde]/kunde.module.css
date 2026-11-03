@@ -1,0 +1,28 @@
+.side {
+  padding: 48px 0 64px;
+}
+
+.hode {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.tittel {
+  font-size: clamp(40px, 6vw, 72px);
+}
+
+.brodsmule {
+  font-size: 13px;
+  color: var(--blekk-svak);
+}
+.brodsmule a:hover {
+  color: var(--blekk);
+}
+
+.innhold {
+  max-width: 640px;
+  color: var(--blekk-myk);
+  font-size: 17px;
+}

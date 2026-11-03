@@ -1,0 +1,79 @@
+export type Prosjekt = {
+  slug: string;
+  navn: string;
+  beskrivelse?: string;
+};
+
+export type Kunde = {
+  slug: string;
+  navn: string;
+  /** Navnet på miljøvariabelen som holder passordet, for eksempel PASSORD_THON */
+  passordNokkel: string;
+  prosjekter: Prosjekt[];
+};
+
+/**
+ * Alt som ligger under themonns.no.
+ * Ny kunde: legg til en linje her og sett passordet som miljøvariabel i Vercel.
+ * Nytt prosjekt: legg til i listen under riktig kunde og lag mappen app/[kunde]/<slug>
+ * hvis prosjektet trenger egen kode. Uten egen mappe vises en enkel prosjektside.
+ */
+export const kunder: Kunde[] = [
+  {
+    slug: "intern",
+    navn: "Monn intern",
+    passordNokkel: "PASSORD_INTERN",
+    prosjekter: [
+      {
+        slug: "hyttebooking",
+        navn: "Hyttebooking",
+        beskrivelse: "Booking av hytta på Skeikampen",
+      },
+    ],
+  },
+  {
+    slug: "thon",
+    navn: "Thon",
+    passordNokkel: "PASSORD_THON",
+    prosjekter: [
+      {
+        slug: "osloairport",
+        navn: "Thon Hotel Oslo Airport",
+        beskrivelse: "Produktmatrise og underlag",
+      },
+    ],
+  },
+  {
+    slug: "eiendomsspar",
+    navn: "Eiendomsspar",
+    passordNokkel: "PASSORD_EIENDOMSSPAR",
+    prosjekter: [
+      {
+        slug: "tryvannstarnet",
+        navn: "Tryvannstårnet",
+      },
+    ],
+  },
+  {
+    slug: "vikaeiendomsforvaltning",
+    navn: "Vika Eiendomsforvaltning",
+    passordNokkel: "PASSORD_VIKA",
+    prosjekter: [
+      {
+        slug: "kirkegata",
+        navn: "Kirkegata 15",
+      },
+    ],
+  },
+];
+
+export function finnKunde(slug: string): Kunde | undefined {
+  return kunder.find((k) => k.slug === slug);
+}
+
+export function finnProsjekt(kundeSlug: string, prosjektSlug: string) {
+  const kunde = finnKunde(kundeSlug);
+  if (!kunde) return undefined;
+  const prosjekt = kunde.prosjekter.find((p) => p.slug === prosjektSlug);
+  return prosjekt ? { kunde, prosjekt } : undefined;
+}

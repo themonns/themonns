@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# themonns.no
 
-## Getting Started
+Monns arbeidsrom for ansatte og kunder. Ett Next.js prosjekt på Vercel, der første mappe i adressen er kunden og andre mappe er prosjektet.
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+themonns.no
+├── intern/                    passord for ansatte
+│   └── hyttebooking
+├── thon/                      passord Thon
+│   └── osloairport
+├── eiendomsspar/              passord Eiendomsspar
+│   └── tryvannstarnet
+└── vikaeiendomsforvaltning/   passord Vika
+    └── kirkegata
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Forsiden er innloggingen. Passordet avgjør hvem du er, så ett felt holder. Hver kunde ser bare sin mappe. Søkemotorer er stengt ute.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Slik kommer det i drift
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Vercel
 
-## Learn More
+1. Importer dette repoet som nytt prosjekt i Vercel.
+2. Under Settings, Environment Variables, legg inn verdiene fra `.env.example` med ekte passord. Alle passordene må være forskjellige.
+3. Sett `TILGANG_HEMMELIGHET` til en lang, tilfeldig tekst. Bytter du den senere, logges alle ut.
+4. Deploy. Du får en vercel.app adresse du kan teste på før domenet kobles.
 
-To learn more about Next.js, take a look at the following resources:
+### 2. Domeneshop
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Under DNS for themonns.no, legg til to poster:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Type  | Navn | Verdi                  |
+|-------|------|------------------------|
+| A     | @    | 76.76.21.21            |
+| CNAME | www  | cname.vercel-dns.com   |
 
-## Deploy on Vercel
+Vercel viser de nøyaktige verdiene under Settings, Domains når du legger til `themonns.no` der. Bruk det Vercel viser hvis det avviker fra tabellen. Det tar fra noen minutter til en time før det virker, og Vercel ordner HTTPS selv.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. Test
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Åpne `themonns.no/thon` uten å være logget inn. Du skal bli sendt til forsiden. Skriv Thons passord og du skal havne tilbake på `/thon`. Skriv internpassordet i en annen nettleser og prøv `/thon`. Du skal bli stoppet.
+
+## Daglig bruk
+
+**Ny kunde.** Legg til en linje i `lib/kunder.ts` og et passord som miljøvariabel i Vercel. Push, og kunden har sin side.
+
+**Nytt prosjekt.** Legg til prosjektet i kundens liste i `lib/kunder.ts`. Trenger prosjektet egen kode, lag mappen `app/[kunde]/<prosjektslug>/` med en `page.tsx`. Den vinner over standardsiden.
+
+**Bytte passord.** Endre miljøvariabelen i Vercel og deploy på nytt. Kunden skriver det nye passordet neste gang.
+
+**Logge ut.** `themonns.no/logg-ut` fjerner all tilgang i den nettleseren. `/logg-ut?kunde=thon` fjerner bare Thon.
+
+## Fonter
+
+Legg Monns fontfiler i `public/fonts/` med navnene `NyghtSerif-Light.woff2`, `NyghtSerif-Regular.woff2` og `Felix.woff2`. De tas i bruk uten andre endringer. Mangler filene, brukes en lignende serif.
+
+## Lokalt
+
+```
+cp .env.example .env.local
+npm install
+npm run dev
+```
+
+## Hvordan tilgangen virker
+
+`proxy.ts` kjører før hver side. Den leser første mappe i adressen, slår opp kunden, og sjekker om nettleseren har en gyldig informasjonskapsel for akkurat den kunden. Kapselen er en signatur av kundens navn, laget med `TILGANG_HEMMELIGHET`, så den kan ikke lages uten å kjenne hemmeligheten. Ingen database, ingen brukerkontoer.
