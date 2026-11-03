@@ -22,7 +22,7 @@ export function LoggInnSkjema({ til }: { til: string }) {
           aria-label="Passord"
         />
         <button type="submit" disabled={venter}>
-          {venter ? "Åpner" : "Åpne"}
+          {venter ? "Åpner" : "Gå inn"}
         </button>
       </div>
       {status?.feil ? <p className="feil">{status.feil}</p> : null}

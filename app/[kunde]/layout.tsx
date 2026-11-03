@@ -17,11 +17,10 @@ export default async function KundeLayout({
           Monn
         </Link>
         <nav>
-          <span className="etikett">{kunde.navn}</span>
+          <span className="kunde">{kunde.navn}</span>
           <a href={`/logg-ut?kunde=${kunde.slug}`}>Logg ut</a>
         </nav>
       </header>
-      <hr className="strek" />
       {children}
       <footer className="bunn">
         <span>Monn Interiørarkitekter</span>

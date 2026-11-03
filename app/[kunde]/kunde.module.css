@@ -1,28 +1,45 @@
 .side {
-  padding: 48px 0 64px;
+  padding: clamp(48px, 8vh, 96px) 0 64px;
+  max-width: 1100px;
 }
 
 .hode {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 40px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 32px;
+  margin-bottom: clamp(32px, 5vh, 56px);
 }
 
 .tittel {
-  font-size: clamp(40px, 6vw, 72px);
+  font-size: var(--t-display);
+}
+
+.ingress {
+  margin: 0;
+  font-size: var(--t-small);
+  color: var(--ink-2);
 }
 
 .brodsmule {
-  font-size: 13px;
-  color: var(--blekk-svak);
+  font-size: var(--t-small);
+  color: var(--ink-2);
+  margin-bottom: 18px;
 }
 .brodsmule a:hover {
-  color: var(--blekk);
+  color: var(--patina);
 }
 
 .innhold {
-  max-width: 640px;
-  color: var(--blekk-myk);
-  font-size: 17px;
+  max-width: 60ch;
+  color: var(--ink-2);
+  font-size: var(--t-lead);
+  line-height: 1.5;
+}
+
+@media (max-width: 720px) {
+  .hode {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
 }

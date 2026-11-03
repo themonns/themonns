@@ -1,7 +1,4 @@
-/*
-  Monns fonter. Fellix ligger i public/fonts. Nyght Serif tas i bruk
-  automatisk når filene legges i public/fonts. Mangler de, brukes en rolig serif som ligner.
-*/
+/* Monns fonter. Hentet fra Kirkegata og hyttebookingen. */
 @font-face {
   font-family: "Nyght Serif";
   src: url("/fonts/NyghtSerif-Light.woff2") format("woff2");
@@ -31,22 +28,34 @@
   font-display: swap;
 }
 
+/* Samme grunntoner som Kirkegata og Tryvann, så alt under themonns.no hører sammen. */
 :root {
-  --papir: #f3f0ea;
-  --papir-dyp: #e9e4db;
-  --blekk: #1b1a17;
-  --blekk-myk: #5c5953;
-  --blekk-svak: #9a958b;
-  --strek: rgba(27, 26, 23, 0.14);
-  --strek-sterk: rgba(27, 26, 23, 0.4);
-  --aksent: #2f4a3a;
+  --paper: #f2f1ee;
+  --stone: #e6e4df;
+  --stone-2: #dad7d1;
+  --ink: #1b1c1e;
+  --ink-2: #5f5b55;
+  --ink-3: #8f8b84;
+  --rule: rgba(27, 28, 30, 0.14);
+  --rule-strong: rgba(27, 28, 30, 0.45);
+  --patina: #41605a;
+  --patina-2: #34504a;
+  --err: #9b3b2e;
 
-  --serif: "Nyght Serif", "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
-  --display: "Nyght Serif", "Cormorant Garamond", Georgia, serif;
-  --sans: "Fellix", -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --f-display: "Nyght Serif", "Didot", "Bodoni 72", Georgia, serif;
+  --f-body: "Fellix", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
-  --maks: 1120px;
-  --kant: clamp(20px, 5vw, 64px);
+  --t-hero: clamp(96px, 27.5vw, 440px);
+  --t-display: clamp(40px, 4.4vw, 68px);
+  --t-head: clamp(24px, 2vw, 30px);
+  --t-lead: clamp(18px, 1.4vw, 21px);
+  --t-body: 17px;
+  --t-small: 14px;
+
+  --m: clamp(20px, 3vw, 48px);
+  --r: 4px;
+  --ease: cubic-bezier(0.22, 0.7, 0.1, 1);
+  color-scheme: light;
 }
 
 * {
@@ -59,13 +68,14 @@ html {
 
 body {
   margin: 0;
-  background: var(--papir);
-  color: var(--blekk);
-  font-family: var(--sans);
-  font-size: 16px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: var(--t-body);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   min-height: 100dvh;
+  font-feature-settings: "tnum" 1;
 }
 
 a {
@@ -76,138 +86,154 @@ a {
 h1,
 h2,
 h3 {
-  font-family: var(--serif);
+  font-family: var(--f-display);
   font-weight: 300;
   margin: 0;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
+  line-height: 1;
+  letter-spacing: -0.015em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--patina);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 .ramme {
-  max-width: var(--maks);
-  margin: 0 auto;
-  padding: 0 var(--kant);
-}
-
-.etikett {
-  font-family: var(--sans);
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--blekk-svak);
+  padding: 0 var(--m);
 }
 
 .ordmerke {
-  font-family: var(--display);
-  font-size: 20px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.strek {
-  border: 0;
-  border-top: 1px solid var(--strek);
-  margin: 0;
-}
-
-/* Skjema */
-.felt {
-  display: flex;
-  gap: 0;
-  border-bottom: 1px solid var(--strek-sterk);
-  padding-bottom: 6px;
-}
-.felt input {
-  flex: 1;
-  border: 0;
-  background: transparent;
-  font: inherit;
-  font-size: 18px;
-  color: var(--blekk);
-  padding: 8px 0;
-  outline: none;
-  min-width: 0;
-}
-.felt input::placeholder {
-  color: var(--blekk-svak);
-}
-.felt button {
-  border: 0;
-  background: transparent;
-  font-family: var(--sans);
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--blekk);
-  cursor: pointer;
-  padding: 8px 0 8px 16px;
-}
-.felt button:hover {
-  color: var(--aksent);
-}
-.feil {
-  margin-top: 12px;
-  font-size: 14px;
-  color: #8a3b2a;
-}
-
-/* Lister */
-.kortliste {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 16px;
-}
-.kort {
-  background: var(--papir);
-  border: 1px solid var(--strek);
-  padding: 28px 24px 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-height: 180px;
-  transition: background 0.2s ease;
-}
-.kort:hover {
-  background: var(--papir-dyp);
-}
-.kort h3 {
+  font-family: var(--f-display);
+  font-weight: 300;
   font-size: 26px;
-}
-.kort p {
-  margin: 0;
-  color: var(--blekk-myk);
-  font-size: 14px;
-}
-.kort .pil {
-  margin-top: auto;
-  font-size: 14px;
-  color: var(--blekk-svak);
+  letter-spacing: -0.01em;
+  line-height: 1;
 }
 
-/* Topplinje */
+.stille {
+  color: var(--ink-2);
+}
+
+/* Topplinje og bunn på kundesidene */
 .topp {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  padding: 28px 0;
+  padding: 26px 0 22px;
+  border-bottom: 1px solid var(--rule);
 }
 .topp nav {
   display: flex;
   align-items: baseline;
-  gap: 28px;
-  font-size: 13px;
-  color: var(--blekk-myk);
+  gap: 32px;
+  font-size: var(--t-small);
+}
+.topp nav .kunde {
+  color: var(--ink-2);
 }
 .topp nav a:hover {
-  color: var(--blekk);
+  color: var(--patina);
 }
 
 .bunn {
-  padding: 48px 0 40px;
-  font-size: 12px;
-  color: var(--blekk-svak);
+  padding: 56px 0 36px;
+  font-size: var(--t-small);
+  color: var(--ink-3);
   display: flex;
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
+}
+
+/* Passordfeltet. Én linje, slik Kirkegata gjør det med skjema. */
+.felt {
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+  border-bottom: 1px solid var(--rule-strong);
+  transition: border-color 0.25s var(--ease);
+}
+.felt:focus-within {
+  border-color: var(--patina);
+}
+.felt input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: var(--t-lead);
+  color: var(--ink);
+  padding: 14px 0;
+  outline: none;
+  letter-spacing: 0.02em;
+}
+.felt input::placeholder {
+  color: var(--ink-3);
+  letter-spacing: 0;
+}
+.felt button {
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: var(--t-small);
+  font-weight: 500;
+  color: var(--patina);
+  cursor: pointer;
+  padding: 14px 0;
+  transition: color 0.2s var(--ease);
+}
+.felt button:hover {
+  color: var(--patina-2);
+}
+.felt button:disabled {
+  color: var(--ink-3);
+  cursor: default;
+}
+.feil {
+  margin: 14px 0 0;
+  font-size: var(--t-small);
+  color: var(--err);
+}
+
+/* Prosjektliste på kundesidene, rader med linjer slik Vika siden har */
+.liste {
+  border-top: 1px solid var(--rule);
+}
+.rad {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 24px;
+  padding: 26px 0;
+  border-bottom: 1px solid var(--rule);
+  transition: padding-left 0.3s var(--ease);
+}
+.rad:hover {
+  padding-left: 12px;
+}
+.rad h3 {
+  font-size: var(--t-head);
+  margin-bottom: 4px;
+}
+.rad p {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--t-small);
+}
+.rad .se {
+  font-size: var(--t-small);
+  font-weight: 500;
+  color: var(--patina);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
 }

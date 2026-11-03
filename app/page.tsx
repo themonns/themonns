@@ -9,23 +9,23 @@ export default async function Forside({ searchParams }: PageProps<"/">) {
   return (
     <main className={styles.side}>
       <header className={styles.topp}>
-        <span className="ordmerke">Monn</span>
-        <span className="etikett">Arbeidsrom</span>
+        <span>Monn Interiørarkitekter</span>
+        <span>Arbeidsrom for ansatte og kunder</span>
       </header>
 
       <section className={styles.midt}>
-        <h1 className={styles.tittel}>Velkommen.</h1>
-        <p className={styles.ingress}>
-          Skriv inn passordet du har fått, så kommer du rett til dine prosjekter.
-        </p>
-        <div className={styles.skjema}>
+        <h1 className={styles.ord}>Monn</h1>
+        <div className={styles.rad}>
           <LoggInnSkjema til={til} />
+          <p className={styles.hjelp}>
+            Passordet du har fått tar deg rett til dine prosjekter.
+          </p>
         </div>
       </section>
 
       <footer className={styles.bunn}>
-        <span>Monn Interiørarkitekter</span>
         <span>Oslo</span>
+        <span>themonns.no</span>
       </footer>
     </main>
   );

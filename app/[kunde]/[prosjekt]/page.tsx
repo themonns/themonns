@@ -27,12 +27,10 @@ export default async function ProsjektSide({
 
   return (
     <main className={styles.side}>
+      <p className={styles.brodsmule}>
+        <Link href={`/${kunde.slug}`}>{kunde.navn}</Link>
+      </p>
       <div className={styles.hode}>
-        <span className={styles.brodsmule}>
-          <Link href={`/${kunde.slug}`}>{kunde.navn}</Link>
-          {" / "}
-          {prosjekt.navn}
-        </span>
         <h1 className={styles.tittel}>{prosjekt.navn}</h1>
       </div>
       <p className={styles.innhold}>
