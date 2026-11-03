@@ -80,7 +80,7 @@ export function HalftoneOrd({
       m.font = `${vekt} 100px ${skrift}`;
       const prove = m.measureText(ord);
       const blekk100 = (prove.actualBoundingBoxLeft || 0) + (prove.actualBoundingBoxRight || prove.width);
-      const str = blekk100 > 0 ? ((w * 0.985) / blekk100) * 100 : 0;
+      const str = blekk100 > 0 ? ((w * 0.96) / blekk100) * 100 : 0;
       m.font = `${vekt} ${str}px ${skrift}`;
       const box = m.measureText(ord);
       const venstre = box.actualBoundingBoxLeft || 0;
