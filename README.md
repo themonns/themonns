@@ -25,6 +25,12 @@ Forsiden er innloggingen. Passordet avgjør hvem du er, så ett felt holder. Hve
 3. Sett `TILGANG_HEMMELIGHET` til en lang, tilfeldig tekst. Bytter du den senere, logges alle ut.
 4. Deploy. Du får en vercel.app adresse du kan teste på før domenet kobles.
 
+### 1b. Databasen
+
+Hyttebookingen og Thon matrisen lagrer i Upstash Redis. I Vercel, under Storage, koble prosjektet til den Upstash databasen de gamle prosjektene allerede bruker. Da følger alle bookinger og alle Thons valg med, uten flytting. Vercel setter `KV_REST_API_URL` og `KV_REST_API_TOKEN` selv. Bruker de to gamle prosjektene hver sin database, velg den som Thon matrisen bruker, og si fra, så flyttes hyttebookingens data over.
+
+Deploy på nytt etter at databasen er koblet.
+
 ### 2. Domeneshop
 
 Under DNS for themonns.no, legg til to poster:
@@ -44,7 +50,18 @@ Vercel viser de nøyaktige verdiene under Settings, Domains når du legger til `
 
 **Ny kunde.** Legg til en linje i `lib/kunder.ts` og et passord som miljøvariabel i Vercel. Push, og kunden har sin side.
 
-**Nytt prosjekt.** Legg til prosjektet i kundens liste i `lib/kunder.ts`. Trenger prosjektet egen kode, lag mappen `app/[kunde]/<prosjektslug>/` med en `page.tsx`. Den vinner over standardsiden.
+**Nytt prosjekt.** Legg til prosjektet i kundens liste i `lib/kunder.ts`. Trenger prosjektet egen kode, lag mappen `app/<kunde>/<prosjektslug>/` med en `page.tsx`. Den vinner over standardsiden.
+
+**Flytte inn en ferdig HTML side.** Legg HTML filen i `sider/`, bilder og skript i `public/<kunde>/<prosjekt>/`, og lag `app/<kunde>/<prosjekt>/route.ts` som serverer filen (se `app/thon/osloairport/route.ts`). Lenker til `/api/...` i siden skrives om til `/<kunde>/<prosjekt>/api/...`, så tilgangen dekker dem. Legg filen til i `outputFileTracingIncludes` i `next.config.ts`.
+
+## Appene som er flyttet inn
+
+| Adresse | Kom fra | Lagring |
+|---|---|---|
+| `/intern/hyttebooking` | themonns/hyttebooking | Redis, nøkler `skeikampen:*` |
+| `/thon/osloairport` | themonns/thonmatrise | Redis, nøkler `thon:edits` og `thon:logg` |
+
+Begge hadde egen innlogging før. Den er tatt ut, forsiden her dekker det. Thon matrisen spør etter navn første gang, siden navnet vises når noen fjerner et produkt. De gamle Vercel prosjektene kan slettes når domenet er over, men vent til databasen er koblet til her.
 
 **Bytte passord.** Endre miljøvariabelen i Vercel og deploy på nytt. Kunden skriver det nye passordet neste gang.
 
@@ -52,7 +69,7 @@ Vercel viser de nøyaktige verdiene under Settings, Domains når du legger til `
 
 ## Fonter
 
-Legg Monns fontfiler i `public/fonts/` med navnene `NyghtSerif-Light.woff2`, `NyghtSerif-Regular.woff2` og `Felix.woff2`. De tas i bruk uten andre endringer. Mangler filene, brukes en lignende serif.
+Fellix ligger i `public/fonts/`. Legg Nyght Serif der også, som `NyghtSerif-Light.woff2` og `NyghtSerif-Regular.woff2`, så tas den i bruk uten andre endringer. Til da brukes en lignende serif.
 
 ## Lokalt
 

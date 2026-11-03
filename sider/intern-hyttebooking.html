@@ -1,0 +1,827 @@
+<!doctype html><html lang="nb"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><title>Skeikampen Hyttebooking</title><meta name="description" content="Book Monns leilighet på Skeikampen."></head><body>
+
+<style>
+/* Layout: monn.no language. Sticky Monn bar, photo hero anchored low with Monn arch, grey section titles, list of stays, dark booking panel, tabbed Praktisk, dark footer */
+@font-face{font-family:"Fellix";src:url("/intern/hyttebooking/fonts/Fellix-Regular.otf") format("opentype");font-weight:400;font-display:swap}
+@font-face{font-family:"Fellix";src:url("/intern/hyttebooking/fonts/Fellix-Medium.otf") format("opentype");font-weight:500 700;font-display:swap}
+:root{
+  --bg:#ececea; --panel:#f6f6f6; --raised:#ffffff; --ink:#222222; --ink2:#383839; --muted:#626260; --title:#686866; --rule:#d3d3d0;
+  --selbg:#d5e2d3; --accent:#234923; --dark:#383839; --dark-ink:#ececea; --dark-muted:#b8b8b6; --dark-rule:#4d4d4e; --field:#8e8e8d;
+  --warn:#8a5200; --danger:#a3312b; --ok:#234923; --sel:#234923; --sel-ink:#ffffff;
+  --f:"Fellix", "Helvetica Neue", Arial, sans-serif;
+  --p1:#3c6e91; --p2:#7a5c99; --p3:#2c622c; --p4:#a8572e; --p5:#8d6b1f; --p6:#a03f63; --p7:#2d7f86; --p8:#5b6b2a;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#262627; --panel:#303031; --raised:#3a3a3b; --ink:#ececea; --ink2:#dcdcda; --muted:#adadab; --title:#9d9d9b; --rule:#444446;
+  --selbg:#33473a; --accent:#9fcf9f; --dark:#1b1b1c; --dark-rule:#3a3a3b; --warn:#f0c27a; --danger:#f2918a; --ok:#9fcf9f; --sel:#9fcf9f; --sel-ink:#1b1b1c;
+  --p1:#7fb0d4; --p2:#b79bd6; --p3:#7dbb7d; --p4:#e39a72; --p5:#d6b25e; --p6:#e083a6; --p7:#6fc4cb; --p8:#a8b96a;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#262627; --panel:#303031; --raised:#3a3a3b; --ink:#ececea; --ink2:#dcdcda; --muted:#adadab; --title:#9d9d9b; --rule:#444446;
+  --selbg:#33473a; --accent:#9fcf9f; --dark:#1b1b1c; --dark-rule:#3a3a3b; --warn:#f0c27a; --danger:#f2918a; --ok:#9fcf9f; --sel:#9fcf9f; --sel-ink:#1b1b1c;
+  --p1:#7fb0d4; --p2:#b79bd6; --p3:#7dbb7d; --p4:#e39a72; --p5:#d6b25e; --p6:#e083a6; --p7:#6fc4cb; --p8:#a8b96a;
+  color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;scroll-padding-top:80px;scrollbar-color:var(--title) var(--bg)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--ink);font-family:var(--f);font-weight:400;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;caret-color:var(--accent);-webkit-tap-highlight-color:transparent}
+::selection{background:var(--sel);color:var(--sel-ink)}
+.in{max-width:1400px;margin:0 auto;padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+a{color:inherit}
+.num{font-variant-numeric:tabular-nums}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- bar ---------- */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:31;background:var(--dark);opacity:0;transition:opacity .25s}
+body.solid::before{opacity:1}
+.bar{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:30;color:#ececea;transition:background-color .25s}
+body.solid .bar{background:var(--dark)}
+.bar .in{display:flex;align-items:center;gap:40px;height:76px}
+.bar .logo{display:flex;align-items:center;height:44px}
+.bar svg.word{width:66px;height:auto;display:block}
+.bar .tag{font-size:.95rem}
+.bar .sp{flex:1}
+.bar nav{display:flex;gap:32px}
+.bar nav a{font-size:.95rem;text-decoration:none;padding:10px 0}
+.bar nav a:hover{text-decoration:underline;text-underline-offset:6px}
+.menu{display:none;width:44px;height:44px;background:none;border:0;cursor:pointer;position:relative;margin-right:-8px}
+.menu i,.menu i::before{position:absolute;left:8px;right:8px;height:1.5px;background:currentColor;content:""}
+.menu i{top:17px}.menu i::before{top:9px;left:0;right:0}
+@media (max-width:860px){.bar nav,.bar .tag{display:none}.menu{display:block}.bar .in{height:64px}}
+
+.sheet{position:fixed;inset:0;z-index:40;background:var(--dark);color:#ececea;display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 10px) max(24px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 32px) max(24px,env(safe-area-inset-left,0px))}
+.sheet .top{display:flex;justify-content:space-between;align-items:center;height:64px}
+.sheet .close{width:44px;height:44px;background:none;border:0;cursor:pointer;position:relative;margin-right:-8px}
+.sheet .close::before,.sheet .close::after{content:"";position:absolute;left:10px;right:10px;top:21px;height:1.5px;background:currentColor;transform:rotate(45deg)}
+.sheet .close::after{transform:rotate(-45deg)}
+.sheet ul{list-style:none;margin:40px 0 0;padding:0}
+.sheet li a{display:block;font-size:2rem;line-height:1.2;padding:12px 0;text-decoration:none;border-bottom:1px solid var(--dark-rule)}
+.sheet .foot{margin-top:auto;color:var(--dark-muted);font-size:.9rem}
+
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:clamp(340px,52svh,520px);color:#fff;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end}
+.hero .ph{position:absolute;inset:0;background:#383839 url("/intern/hyttebooking/img/hero.webp") center 62%/cover no-repeat;z-index:-2}
+@media (max-width:860px){.hero .ph{background-image:url("/intern/hyttebooking/img/hero-s.webp")}}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(12,22,36,.62) 0,rgba(12,22,36,.28) 45%,rgba(12,22,36,0) 75%),linear-gradient(180deg,rgba(12,22,36,.45) 0,rgba(12,22,36,0) 26%,rgba(12,22,36,.18) 55%,rgba(12,20,30,.8) 100%)}
+.hero .in{width:100%;padding-block:120px clamp(32px,4vw,52px);position:relative}
+.hero h1{font-weight:400;font-size:clamp(2.4rem,5vw,4.2rem);line-height:1.04;letter-spacing:-.012em;margin:0;max-width:11ch;text-wrap:balance}
+.hero .off{margin:36px 0 0 clamp(0px,9vw,130px);max-width:46ch;font-size:1.06rem;line-height:1.6}
+.hero .ctas{display:flex;flex-wrap:wrap;align-items:center;gap:14px 40px;margin:36px 0 0 clamp(0px,9vw,130px)}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;background:#fff;color:#222;border:1px solid #fff;padding:0 26px;font-size:1rem;text-decoration:none;cursor:pointer;border-radius:0}
+.btn:hover{background:transparent;color:#fff}
+.chev{display:inline-flex;align-items:center;gap:12px;min-height:44px;text-decoration:none;font-size:1rem}
+.chev::after{content:"";width:8px;height:8px;border-right:2px solid currentColor;border-top:2px solid currentColor;transform:rotate(45deg)}
+.chev:hover{text-decoration:underline;text-underline-offset:6px}
+.status{display:flex;align-items:center;gap:10px;margin:20px 0 0;font-size:1.02rem}
+.status i{width:9px;height:9px;border-radius:50%;background:#9fcf9f;flex:none}
+.status.busy i{background:#f0c27a}
+.status.off i{background:#bdbdbb}
+.arch{position:absolute;right:max(24px,env(safe-area-inset-right,0px));bottom:clamp(48px,7vw,88px);width:clamp(96px,10vw,128px)}
+.arch svg{display:block;width:100%;height:auto}
+@media (max-width:860px){.hero .in{padding-top:100px}}
+@media (max-width:420px){.hero .ctas{flex-direction:column;align-items:stretch}.hero .ctas .chev{justify-content:flex-start}}
+
+/* ---------- offline notice ---------- */
+.notice{background:var(--panel);border-bottom:1px solid var(--rule)}
+.notice .in{padding-block:22px;display:grid;gap:4px}
+.notice b{font-weight:500}
+.notice span{color:var(--muted);font-size:.95rem;max-width:70ch}
+
+/* ---------- sections ---------- */
+.sec{padding-block:clamp(36px,5vw,64px)}
+.title{font-size:clamp(1.4rem,2vw,1.6rem);color:var(--title);font-weight:400;margin:0}
+.head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}
+.arrows{display:flex;align-items:center;gap:4px;margin-right:-10px}
+.arrows button{width:44px;height:44px;background:none;border:0;cursor:pointer;position:relative;color:var(--ink)}
+.arrows button.ar::after{content:"";position:absolute;left:50%;top:50%;width:10px;height:10px;border-right:2px solid currentColor;border-top:2px solid currentColor;transform:translate(-70%,-50%) rotate(45deg)}
+.arrows button.l::after{transform:translate(-30%,-50%) rotate(-135deg)}
+.arrows button.c{width:auto;padding:0 10px;font-size:.95rem;text-decoration:underline;text-underline-offset:5px}
+
+/* calendar */
+.months{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px}
+@media (max-width:900px){.months{grid-template-columns:1fr}.months .month:nth-child(2){display:none}}
+.month h3{font-weight:400;font-size:1.6rem;margin:0 0 16px}
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.dow{font-size:.82rem;color:var(--muted);padding-bottom:4px}
+.day{position:relative;min-height:92px;background:var(--panel);padding:8px 0 8px;display:flex;flex-direction:column;gap:4px;min-width:0;border:0;text-align:left;font:inherit;color:inherit;align-items:stretch;justify-content:flex-start;transition:background-color .15s}
+button.day{cursor:pointer}
+button.day:hover{background:var(--raised)}
+button.day:hover .d{text-decoration:underline;text-underline-offset:4px}
+.day .d{font-size:.95rem;line-height:1.2;padding:0 8px}
+.day.out{background:transparent;visibility:hidden}
+.day.past{background:transparent}.day.past .d{color:var(--muted)}
+.day.today .d{display:inline-flex;align-self:flex-start;margin-left:4px;padding:1px 6px;background:var(--ink);color:var(--bg)}
+.seg{position:relative;height:22px;margin-right:-4px;color:#fff;font-size:.74rem;line-height:22px}
+.seg.st{margin-left:6px;border-top-left-radius:11px;border-bottom-left-radius:11px}
+.seg.en{margin-right:6px;border-top-right-radius:11px;border-bottom-right-radius:11px}
+.seg.wk{margin-right:0}
+.seg.t{opacity:.5}
+.seg .lb{position:absolute;left:8px;top:0;z-index:3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+.gap{height:22px}
+.day.past .seg{opacity:.5}
+@media (max-width:600px){.day{min-height:64px;padding:5px 0}.day .d{font-size:.85rem;padding:0 5px}.seg,.gap{height:16px;line-height:16px;font-size:.62rem}.seg.st{margin-left:3px;border-radius:8px 0 0 8px}.seg.en{margin-right:3px;border-top-right-radius:8px;border-bottom-right-radius:8px}.seg.st.en{border-radius:8px}.seg .lb{left:5px}}
+.calfoot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 28px;margin-top:18px;font-size:.88rem;color:var(--muted)}
+.legend{display:flex;gap:24px}
+.legend span::before{content:"";display:inline-block;width:18px;height:10px;border-radius:5px;margin-right:8px;background:var(--ink2);vertical-align:-1px}
+.legend span.t::before{opacity:.5}
+
+/* stays */
+.stays{border-top:1px solid var(--ink)}
+.stay{display:grid;grid-template-columns:12px minmax(0,1.1fr) minmax(0,1.3fr) 220px;gap:8px 24px;align-items:center;padding:20px 0;border-bottom:1px solid var(--rule)}
+.stay .dot{width:12px;height:12px;border-radius:50%}
+.stay .nm{font-size:clamp(1.35rem,2.2vw,1.8rem);line-height:1.2;min-width:0;overflow-wrap:anywhere}
+.stay .when{font-size:1rem}
+.stay .meta{color:var(--muted);font-size:.9rem}
+.stay .tags{display:inline-flex;gap:8px;margin-left:10px;vertical-align:4px}
+.tag2{font-size:.75rem;padding:2px 9px;background:var(--panel);color:var(--ink);white-space:nowrap}
+.tag2.bad{color:var(--warn)}
+.stay .acts{display:flex;gap:6px;justify-content:flex-end}
+.act{min-height:44px;min-width:44px;padding:0 14px;background:none;border:1px solid var(--rule);cursor:pointer;font-size:.9rem;color:var(--ink)}
+.act:hover{border-color:var(--ink)}
+.act.del{color:var(--danger)}
+.act.armed{background:var(--danger);border-color:var(--danger);color:#fff}
+@media (max-width:760px){
+  .stay{grid-template-columns:12px minmax(0,1fr);align-items:start;gap:4px 14px}
+  .stay .dot{margin-top:10px}
+  .stay > div:nth-child(3),.stay .acts{grid-column:2}
+  .stay .acts{justify-content:flex-start;margin-top:10px}
+  .stay .tags{margin-left:0;display:flex;margin-top:6px}
+}
+.more{margin-top:24px;min-height:48px;padding:0 22px;background:none;border:1px solid var(--ink2);cursor:pointer;font-size:.95rem}
+.more:hover{background:var(--ink2);color:var(--bg)}
+.empty{color:var(--muted);font-size:1.05rem;padding:20px 0}
+
+/* booking */
+.bookwrap{background:var(--dark);color:var(--dark-ink);color-scheme:dark}
+.bookwrap .in{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:56px;align-items:center;padding-block:clamp(64px,8vw,110px)}
+@media (max-width:900px){.bookwrap .in{grid-template-columns:1fr;gap:36px}}
+.bookwrap h2{font-weight:400;font-size:clamp(2rem,3.4vw,2.8rem);line-height:1.15;margin:0}
+.bookwrap p{color:var(--dark-muted);margin:16px 0 0;max-width:46ch}
+.bookwrap ul{margin:28px 0 0;padding:0;list-style:none;color:var(--dark-muted);font-size:.95rem;max-width:520px}
+.bookwrap li{padding:10px 0;border-top:1px solid var(--dark-rule)}
+.bookwrap .go{margin-top:32px}
+.photo{aspect-ratio:1;background:#383839 url("/intern/hyttebooking/img/nystua.webp") center/cover no-repeat;max-width:520px;width:100%;justify-self:end}
+@media (max-width:900px){.photo{justify-self:stretch;max-width:none;aspect-ratio:4/3;background-position:center 70%}}
+.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 16px}
+.form .full{grid-column:1/-1}
+@media (max-width:560px){.form{grid-template-columns:1fr}}
+.fld{display:flex;flex-direction:column;gap:6px;min-width:0}
+.fld label{font-size:.9rem;color:var(--dark-muted)}
+.fld input,.fld select{-webkit-appearance:none;appearance:none;display:block;width:100%;min-width:0;min-height:54px;background:transparent;border:1px solid var(--field);color:var(--dark-ink);padding:0 16px;font-size:1.05rem;border-radius:0;line-height:52px}
+.fld input::-webkit-date-and-time-value{text-align:left}
+.fld input[type="date"]::-webkit-calendar-picker-indicator{opacity:.85;cursor:pointer}
+.fld select{background-image:linear-gradient(45deg,transparent 50%,#ececea 50%),linear-gradient(135deg,#ececea 50%,transparent 50%);background-position:calc(100% - 22px) 50%,calc(100% - 16px) 50%;background-size:6px 6px;background-repeat:no-repeat;padding-right:44px}
+.fld select option{color:#222;background:#fff}
+.fld input::placeholder{color:#a3a3a1}
+.fld input:focus,.fld select:focus{outline:none;border-color:#fff;box-shadow:inset 0 0 0 1px #fff}
+.chk{display:flex;gap:14px;align-items:center;min-height:44px;font-size:1rem;cursor:pointer}
+.chk input{width:22px;height:22px;accent-color:#ececea;flex:none;margin:0}
+.send{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:54px;background:#ececea;color:#222;border:1px solid #ececea;padding:0 36px;font-size:1.05rem;cursor:pointer;border-radius:0}
+.send::after{content:"";width:8px;height:8px;border-right:2px solid currentColor;border-top:2px solid currentColor;transform:rotate(45deg)}
+.send:hover{background:transparent;color:#ececea}
+.send.full-w{width:100%}
+.send:disabled{opacity:.5;cursor:not-allowed}
+@media (max-width:560px){.send{width:100%}}
+.fb:empty{display:none}
+.fb{font-size:.98rem}
+.fb div{padding:10px 0;border-top:1px solid var(--dark-rule)}
+.fb .warn{color:#f0c27a}.fb .ok{color:#a9d8a9}
+
+/* praktisk */
+.areas{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"txt tabs";gap:60px;margin-top:52px}
+.areas .txt{grid-area:txt}.areas .tabs{grid-area:tabs}
+.areas h3{font-weight:400;font-size:clamp(1.8rem,2.8vw,2.4rem);margin:0 0 16px}
+.areas .txt ul{list-style:none;margin:0;padding:0}
+.areas .txt li{padding:11px 0;border-top:1px solid var(--rule);max-width:62ch}
+.tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 40px;align-content:start}
+.tabs button{justify-self:start;min-height:44px;background:none;border:0;padding:8px 0;cursor:pointer;font-size:1rem;color:var(--muted);position:relative;text-align:left}
+.tabs button::after{content:"";position:absolute;left:0;bottom:2px;width:46px;height:1px;background:var(--rule)}
+.tabs button[aria-selected="true"]{font-weight:500;color:var(--ink)}
+.tabs button[aria-selected="true"]::after{background:var(--ink)}
+@media (max-width:900px){
+  .areas{grid-template-columns:1fr;grid-template-areas:"tabs" "txt";gap:24px;margin-top:28px}
+  .tabs{display:flex;gap:24px;overflow-x:auto;scrollbar-width:none;margin:0 -24px;padding:0 24px;border-bottom:1px solid var(--rule)}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{flex:none;padding:10px 0 12px}
+  .tabs button::after{bottom:-1px;width:100%;background:transparent}
+}
+.code{font-weight:500;user-select:all;letter-spacing:.04em}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin-top:64px}
+.facts div{background:var(--panel);padding:24px 22px}
+.facts b{display:block;font-weight:400;font-size:clamp(2rem,3.4vw,2.8rem);line-height:1}
+.facts span{display:block;color:var(--muted);font-size:.92rem;margin-top:10px}
+@media (max-width:900px){.facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* needs */
+.needs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 56px;margin-top:32px}
+@media (max-width:760px){.needs{grid-template-columns:1fr}}
+.need{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 14px;align-items:center;padding:8px 0;border-top:1px solid var(--rule)}
+.need input{width:22px;height:22px;margin:0;accent-color:var(--accent)}
+.need label{padding:8px 0;cursor:pointer;min-width:0}
+.need .t{font-size:1.08rem;display:block}
+.need .c{font-size:.88rem;color:var(--muted);display:block}
+.need.done .t{text-decoration:line-through;color:var(--muted)}
+.need .x{min-height:44px;min-width:44px;padding:0 8px;background:none;border:0;color:var(--muted);cursor:pointer;font-size:.9rem;text-decoration:underline;text-underline-offset:4px}
+.need .x:hover{color:var(--danger)}
+.addneed{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) auto;margin-top:32px;max-width:900px}
+.addneed input{-webkit-appearance:none;appearance:none;border:1px solid var(--ink2);border-right:0;border-radius:0;background:transparent;min-height:54px;padding:0 18px;font-size:1.02rem;min-width:0}
+.addneed input::placeholder{color:var(--muted)}
+.addneed input:focus{outline:none;box-shadow:inset 0 0 0 1px var(--ink)}
+.addneed button{min-height:54px;background:var(--ink2);color:var(--bg);border:1px solid var(--ink2);padding:0 30px;cursor:pointer;font-size:1rem;border-radius:0}
+.addneed button:hover{background:transparent;color:var(--ink)}
+@media (max-width:640px){.addneed{grid-template-columns:1fr;gap:10px}.addneed input{border-right:1px solid var(--ink2)}}
+
+/* footer */
+footer{background:var(--dark);color:var(--dark-ink);padding-block:64px calc(env(safe-area-inset-bottom,0px) + 40px);font-size:.9rem}
+footer .cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:36px}
+@media (max-width:760px){footer .cols{grid-template-columns:1fr}}
+footer .h{font-size:1.02rem;margin-bottom:10px}
+footer p{margin:0 0 4px;color:var(--dark-muted)}
+footer .sel{user-select:all;color:var(--dark-ink);overflow-wrap:anywhere}
+footer .credit{margin-top:52px;color:var(--dark-muted);font-size:.8rem;max-width:80ch}
+footer svg{width:60px;height:auto;display:block;margin-bottom:18px}
+/* kompakt: regler, neste opphold, infokort */
+.rules{margin-top:14px;font-size:.92rem;color:var(--muted)}
+.rules button,.lnk{background:none;border:0;padding:0;font:inherit;color:var(--ink);text-decoration:underline;text-underline-offset:4px;cursor:pointer;min-height:44px}
+.nextup{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+.nextup button{display:grid;grid-template-columns:10px minmax(0,1fr);gap:2px 12px;text-align:left;background:var(--panel);border:0;padding:16px 18px;cursor:pointer;font:inherit;color:inherit;min-width:0}
+.nextup button:hover{background:var(--raised)}
+.nextup .dot{width:10px;height:10px;border-radius:50%;margin-top:8px}
+.nextup b{font-weight:400;font-size:1.15rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nextup span.w{grid-column:2;color:var(--muted);font-size:.9rem}
+.nextup .tag2{margin-left:8px;vertical-align:2px}
+@media (max-width:760px){.nextup{grid-template-columns:1fr}}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+.card{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:18px;min-height:132px;text-align:left;background:var(--panel);border:0;padding:20px 20px 18px;cursor:pointer;font:inherit;color:inherit}
+.card:hover{background:var(--raised)}
+.card b{font-weight:400;font-size:1.25rem;line-height:1.25}
+.card span{color:var(--muted);font-size:.9rem;padding-right:20px}
+.card::after{content:"";position:absolute;right:20px;bottom:24px;width:8px;height:8px;border-right:1.5px solid var(--ink);border-top:1.5px solid var(--ink);transform:rotate(45deg)}
+.card.ph{color:#fff;background:#383839 url("/intern/hyttebooking/img/nystua.webp") center 62%/cover no-repeat}
+.card.ph::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,16,24,.62) 0,rgba(10,16,24,.25) 50%,rgba(10,16,24,.62) 100%)}
+.card.ph b,.card.ph span{position:relative;color:#fff}
+.card.ph::after{border-color:#fff}
+@media (max-width:900px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.card{min-height:112px;padding:16px}.card b{font-size:1.1rem}.card::after{right:16px;bottom:20px}}
+.info h3{font-weight:400;font-size:1.15rem;margin:22px 0 4px}
+.info ul{list-style:none;margin:0;padding:0}
+.info li{padding:11px 0;border-top:1px solid var(--rule)}
+.info .img{aspect-ratio:16/9;background:#383839 url("/intern/hyttebooking/img/nystua.webp") center 66%/cover no-repeat;margin:0 0 6px}
+.contact p{margin:0 0 4px}
+.contact .h{font-size:1.1rem;margin:22px 0 6px}
+.contact a{color:inherit}
+footer.mini{padding-block:28px calc(env(safe-area-inset-bottom,0px) + 28px)}
+footer.mini .in{display:flex;flex-wrap:wrap;gap:8px 28px;align-items:center;color:var(--dark-muted)}
+footer.mini svg{margin:0}
+/* historikk */
+.hctl{display:flex;flex-wrap:wrap;align-items:center;gap:12px 28px;margin-bottom:28px}
+.seg2{display:inline-flex;border:1px solid var(--ink2)}
+.seg2 button{min-height:44px;padding:0 18px;background:none;border:0;cursor:pointer;font-size:.98rem;color:var(--ink)}
+.seg2 button[aria-pressed="true"]{background:var(--ink2);color:var(--bg)}
+.hctl select{-webkit-appearance:none;appearance:none;min-height:46px;border:1px solid var(--ink2);background:var(--raised);color:var(--ink);padding:0 44px 0 16px;font-size:1rem;border-radius:0;background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);background-position:calc(100% - 22px) 50%,calc(100% - 16px) 50%;background-size:6px 6px;background-repeat:no-repeat}
+.hctl .tot{color:var(--muted);font-size:.95rem}
+.ptab{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ptab th{text-align:left;font-weight:400;font-size:.85rem;color:var(--muted);padding:0 12px 10px 0;border-bottom:1px solid var(--ink)}
+.ptab th button{background:none;border:0;padding:6px 0;font:inherit;color:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.ptab th button[aria-sort]{color:var(--ink)}
+.ptab th button[aria-sort]::after{content:"";width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px)}
+.ptab th button[aria-sort="ascending"]::after{transform:rotate(-135deg) translateY(-2px)}
+.ptab td{padding:14px 12px 14px 0;border-bottom:1px solid var(--rule);vertical-align:middle}
+.ptab td.n{font-size:1.15rem}
+.ptab .num,.ptab th.r,.ptab td.r{text-align:right}
+.ptab th.r button{margin-left:auto}
+.ptab .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:12px;vertical-align:1px}
+.ptab .pbar{display:block;height:4px;margin-top:6px;background:var(--rule)}
+.ptab .pbar i{display:block;height:100%;background:var(--ink2)}
+.ptab tr.none td{color:var(--muted)}
+@media (max-width:600px){.ptab td.n{font-size:1rem}.ptab .dot{margin-right:8px}.ptab th,.ptab td{padding-right:8px}.ptab .hide-s{display:none}}
+.hlist .yr{font-size:1.5rem;margin:36px 0 10px}
+.hlist .yr:first-child{margin-top:0}
+.hrow{display:grid;grid-template-columns:12px minmax(0,1fr) minmax(0,1.4fr) 90px;gap:4px 18px;align-items:center;padding:12px 0;border-top:1px solid var(--rule)}
+.hrow .dot{width:10px;height:10px;border-radius:50%}
+.hrow .nm{font-size:1.1rem}
+.hrow .r{text-align:right;color:var(--muted)}
+@media (max-width:600px){.hrow{grid-template-columns:12px minmax(0,1fr) auto}.hrow .when{grid-column:2/-1;grid-row:2;color:var(--muted);font-size:.92rem}}
+/* velg hvem + datoer, som et hotell */
+.who{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin:0 0 24px}
+.who label{font-size:1rem;color:var(--muted)}
+.who select,.who input{-webkit-appearance:none;appearance:none;min-height:48px;border:1px solid var(--ink2);background:var(--raised);color:var(--ink);padding:0 44px 0 16px;font-size:1.05rem;border-radius:0;min-width:220px;max-width:100%}
+.who input{padding-right:16px}
+.who select{background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);background-position:calc(100% - 22px) 50%,calc(100% - 16px) 50%;background-size:6px 6px;background-repeat:no-repeat}
+.who select:focus,.who input:focus{outline:none;box-shadow:inset 0 0 0 1px var(--ink)}
+.who.need select,.who.need input{border-color:var(--warn);box-shadow:inset 0 0 0 1px var(--warn)}
+.who .hint{flex-basis:100%;font-size:1.05rem}
+.day.sm,.day.pv{background:var(--selbg)!important}
+.day.ss,.day.se{background:var(--accent)!important;color:var(--sel-ink)}
+.day.ss .d,.day.se .d{color:var(--sel-ink)}
+.day.ss::after,.day.se::after{position:absolute;left:8px;bottom:6px;font-size:.72rem;color:var(--sel-ink)}
+.day.ss::after{content:"Ankomst"}.day.se::after{content:"Avreise"}
+@media (max-width:600px){.day.ss::after,.day.se::after{left:5px;bottom:4px;font-size:.58rem}}
+.cart{position:fixed;left:0;right:0;bottom:0;z-index:35;background:var(--dark);color:var(--dark-ink);color-scheme:dark;box-shadow:0 -10px 30px rgba(0,0,0,.18);padding-bottom:env(safe-area-inset-bottom,0px);transform:translateY(110%);transition:transform .22s}
+.cart.on{transform:none}
+.cart .in{display:flex;align-items:center;gap:14px 20px;flex-wrap:wrap;padding-block:16px}
+.cart .sum{flex:1 1 260px;min-width:0}
+.cart .sum b{display:block;font-weight:400;font-size:1.25rem;line-height:1.3}
+.cart .sum span{display:block;color:var(--dark-muted);font-size:.92rem}
+.cart .sum span.warn{color:#f0c27a}
+.cart input[type=text]{-webkit-appearance:none;appearance:none;min-height:48px;background:transparent;border:1px solid var(--field);color:var(--dark-ink);padding:0 14px;font-size:1rem;border-radius:0;flex:1 1 200px;min-width:0}
+.cart input[type=text]::placeholder{color:#a3a3a1}
+.cart .chk{min-height:48px;font-size:.95rem}
+.cart .cx{min-height:48px;padding:0 16px;background:none;border:1px solid var(--field);color:var(--dark-ink);cursor:pointer;font-size:.95rem}
+.cart .send{min-height:48px}
+@media (max-width:600px){.cart .in{gap:10px}.cart input[type=text]{flex-basis:100%}.cart .send{flex:1}}
+body.carting{padding-bottom:140px}
+@media (prefers-reduced-motion:reduce){.cart{transition:none}}
+/* popup */
+.dlg{position:fixed;inset:0;z-index:45;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(10,12,16,.5);opacity:0;transition:opacity .2s}
+.dlg.open{opacity:1}
+.dlg .pane{position:relative;width:100%;max-width:600px;max-height:calc(100svh - 48px);overflow:auto;background:var(--bg);color:var(--ink);padding:28px 28px 32px;transform:translateY(12px);transition:transform .2s;overscroll-behavior:contain}
+.dlg .pane.wide{max-width:820px}
+.dlg.open .pane{transform:none}
+.dlg h2{font-weight:400;font-size:1.9rem;line-height:1.15;margin:0 48px 6px 0}
+.dlg .sub{color:var(--muted);margin:0 0 18px}
+.dlg .x2{position:absolute;top:14px;right:14px;width:44px;height:44px;background:none;border:0;cursor:pointer;color:inherit;z-index:2}
+.dlg .x2::before,.dlg .x2::after{content:"";position:absolute;left:12px;right:12px;top:21px;height:1.5px;background:currentColor;transform:rotate(45deg)}
+.dlg .x2::after{transform:rotate(-45deg)}
+.det{border-top:1px solid var(--rule)}
+.det .row{display:grid;grid-template-columns:12px minmax(0,1fr);gap:4px 14px;padding:18px 0;border-bottom:1px solid var(--rule)}
+.det .dot{width:12px;height:12px;border-radius:50%;margin-top:9px}
+.det .nm{font-size:1.4rem;line-height:1.3}
+.det .meta{color:var(--muted);font-size:.95rem}
+.det .acts{grid-column:2;display:flex;gap:8px;margin-top:10px}
+.dlg .alt{margin-top:22px;width:100%}
+.dlg .stays{border-top:1px solid var(--ink)}
+.dlg .stay{grid-template-columns:12px minmax(0,1fr);align-items:start;gap:4px 14px}
+.dlg .stay .dot{margin-top:10px}
+.dlg .stay > div:nth-child(3),.dlg .stay .acts{grid-column:2}
+.dlg .stay .acts{justify-content:flex-start;margin-top:8px}
+.dlg .stay .nm{font-size:1.3rem}
+.dlg .needs{grid-template-columns:1fr;margin-top:8px}
+.dlg .addneed{grid-template-columns:1fr;gap:8px;margin-top:20px}
+.dlg .addneed input{border-right:1px solid var(--ink2)}
+@media (max-width:600px){
+  .dlg{align-items:flex-end;padding:0}
+  .dlg .pane,.dlg .pane.wide{max-width:none;max-height:92svh;padding:24px 20px calc(env(safe-area-inset-bottom,0px) + 24px);transform:translateY(100%)}
+  .dlg h2{font-size:1.6rem}
+}
+@media (prefers-reduced-motion:reduce){.dlg,.dlg .pane{transition:none}}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateX(-50%);z-index:60;background:var(--ink2);color:var(--bg);padding:14px 20px;font-size:.95rem;max-width:calc(100% - 32px)}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="monnword"><path d="M426.226,86.2A11.466,11.466,0,0,0,414.773,74.75a9.468,9.468,0,0,0-7.419,3.348V75.311H403.32V97.12h4.034V86.2a7.419,7.419,0,1,1,14.838,0V97.12h4.034Z" transform="translate(-228.156)"/><path d="M336.326,86.2A11.466,11.466,0,0,0,324.873,74.75a9.468,9.468,0,0,0-7.419,3.348V75.311H313.42V97.12h4.034V86.2a7.419,7.419,0,1,1,14.838,0V97.12h4.034Z" transform="translate(-165.67)"/><path d="M236.71,74.75A11.45,11.45,0,1,0,248.16,86.2,11.463,11.463,0,0,0,236.71,74.75Zm0,18.869a7.419,7.419,0,1,1,7.419-7.419A7.426,7.426,0,0,1,236.71,93.619Z" transform="translate(-104.392)"/><path d="M105.4,74.75h0a11.447,11.447,0,0,0-9.438,4.97,11.447,11.447,0,0,0-9.438-4.97A9.468,9.468,0,0,0,79.1,78.1V75.311H75.07V97.12H79.1V86.2a7.419,7.419,0,1,1,14.838,0V97.12h4.037V86.2a7.419,7.419,0,1,1,14.838,0V97.12h4.034V86.2A11.471,11.471,0,0,0,105.4,74.75Z"/></g>
+  </defs>
+</svg>
+
+<div class="bar" id="bar">
+  <div class="in">
+    <a class="logo" href="#top" aria-label="Til toppen"><svg class="word" viewBox="75 74.75 123 22.9" fill="#ececea" aria-hidden="true"><use href="#monnword"/></svg></a>
+    <span class="tag">Hytta på Skeikampen</span>
+    <span class="sp"></span>
+    <nav aria-label="Seksjoner"><a href="#kalender">Book</a><a href="#info">Praktisk</a><a href="#" data-open="hist">Historikk</a><a href="#" data-open="needs">Mangler</a></nav>
+    <button class="menu" id="menuBtn" type="button" aria-label="Åpne meny" aria-expanded="false" aria-controls="sheet"><i></i></button>
+  </div>
+</div>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="top"><svg class="word" viewBox="75 74.75 123 22.9" fill="#ececea" style="width:66px" aria-hidden="true"><use href="#monnword"/></svg><button class="close" id="closeBtn" type="button" aria-label="Lukk meny"></button></div>
+  <ul>
+    <li><a href="#kalender">Book hytta</a></li>
+    <li><a href="#info">Praktisk</a></li>
+    <li><a href="#" data-open="hist">Hvem har vært der</a></li>
+    <li><a href="#" data-open="needs">Mangler på hytta</a></li>
+  </ul>
+  <div class="foot">Hytta på Skeikampen, leilighet C403</div>
+</div>
+
+<header class="hero" id="top">
+  <div class="ph" role="img" aria-label="Skiløype på Skeikampen"></div>
+  <div class="in">
+    <h1>Hytta på Skeikampen</h1>
+    <div class="status" id="now"><i></i><span>Henter bookinger</span></div>
+  </div>
+</header>
+
+<div class="notice" id="notice" hidden><div class="in"><b>Får ikke kontakt med bookingen</b><span>Sjekk nettet. Siden prøver igjen av seg selv.</span></div></div>
+
+<main>
+<section class="sec" id="kalender">
+  <div class="in">
+    <div class="head"><h2 class="title">Book hytta</h2><div class="arrows"><button class="ar l" id="prev" type="button" aria-label="Forrige måned"></button><button class="c" id="todayBtn" type="button">I dag</button><button class="ar" id="next" type="button" aria-label="Neste måned"></button></div></div>
+    <div class="who" id="whoRow"><label for="who">Hvem booker?</label><select id="who"><option value="">Velg navn</option></select><input id="whoNew" type="text" placeholder="Skriv navnet ditt" autocomplete="off" autocapitalize="words" aria-label="Nytt navn" hidden><span class="hint" id="hint" aria-live="polite">Trykk på ankomstdagen.</span></div>
+    <div class="months" id="months"></div>
+    <div class="calfoot"><div class="legend"><span>Booket</span><span class="t">Foreløpig</span></div><span>Trykk på et opphold for å se hvem som er der.</span></div>
+    <p class="rules">Inntil 7 netter, maks 4 i høytider. Utsjekk 11:00. Du betaler kun vask, 720 kr. <button type="button" data-open="info:regler">Alle regler</button></p>
+  </div>
+</section>
+
+<section class="sec" id="opphold" style="padding-top:0">
+  <div class="in">
+    <div class="head"><h2 class="title">Neste opphold</h2><button class="lnk" type="button" data-open="all" id="allBtn">Se alle</button></div>
+    <div class="nextup" id="upcoming"><div class="empty">Ingen kommende opphold ennå.</div></div>
+  </div>
+</section>
+
+<section class="sec" id="info" style="padding-top:0">
+  <div class="in">
+    <div class="head"><h2 class="title">Før du drar</h2></div>
+    <div class="cards">
+      <button class="card ph" type="button" data-open="info:ankomst"><b>Ankomst og nøkler</b><span>Vei, parkering og kode</span></button>
+      <button class="card" type="button" data-open="info:tamed"><b>Ta med</b><span>Sengetøy og håndklær</span></button>
+      <button class="card" type="button" data-open="info:leilighet"><b>Leiligheten</b><span>Soverom, internett og spa</span></button>
+      <button class="card" type="button" data-open="info:avreise"><b>Avreise</b><span>Sjekkliste før du drar</span></button>
+      <button class="card" type="button" data-open="needs"><b>Mangler på hytta</b><span id="needsTeaser">Det som bør kjøpes inn</span></button>
+      <button class="card" type="button" data-open="hist"><b>Hvem har vært der</b><span id="histTeaser">Historikk siden 2020</span></button>
+      <button class="card" type="button" data-open="info:regler"><b>Regler</b><span>Ferier og loddtrekning</span></button>
+      <button class="card" type="button" data-open="info:kontakt"><b>Kontakter</b><span>Vask og nødkontakt</span></button>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="mini">
+  <div class="in">
+    <svg viewBox="75 74.75 123 22.9" fill="#ececea" aria-label="Monn" role="img"><use href="#monnword"/></svg>
+    <span>Sanatorievegen 25A, 2652 Svingvoll. Leilighet C403.</span>
+  </div>
+</footer>
+<div class="dlg" id="dlg" hidden>
+  <div class="pane" id="pane" role="dialog" aria-modal="true" aria-labelledby="dlgTitle">
+    <button class="x2" id="dlgClose" type="button" aria-label="Lukk"></button>
+    <div class="view" id="vDet" hidden>
+      <h2 id="detTitle">Opphold</h2>
+      <p class="sub" id="detSub"></p>
+      <div class="det" id="detList"></div>
+      <button class="more alt" id="detBook" type="button" hidden>Book fra avreisedagen</button>
+    </div>
+    <div class="view" id="vInfo" hidden><h2 id="infoTitle"></h2><div class="info" id="infoBody"></div></div>
+    <div class="view" id="vAll" hidden><h2>Kommende opphold</h2><p class="sub" id="allSub"></p><div class="stays" id="allList"></div></div>
+    <div class="view" id="vHist" hidden>
+      <h2>Hvem har vært der</h2>
+      <div class="hctl">
+        <div class="seg2" role="group" aria-label="Visning"><button type="button" data-hv="p" aria-pressed="true">Per person</button><button type="button" data-hv="l" aria-pressed="false">Alle opphold</button></div>
+        <label class="vh" for="hYear">År</label><select id="hYear"><option value="">Alle år</option></select>
+        <span class="tot" id="hTot"></span>
+      </div>
+      <div id="hBody"><div class="empty">Henter historikk.</div></div>
+      <button class="more" id="hMore" type="button" hidden>Vis flere</button>
+    </div>
+    <div class="view" id="vNeeds" hidden>
+      <h2>Mangler på hytta</h2>
+      <p class="sub">Kryss av når det er kjøpt inn eller fikset.</p>
+      <div class="needs" id="needs"><div class="empty">Listen er tom.</div></div>
+      <form class="addneed" id="nform">
+        <input id="n-text" type="text" placeholder="Hva mangler?" autocomplete="off" aria-label="Hva mangler">
+        <input id="n-comment" type="text" placeholder="Kommentar" autocomplete="off" aria-label="Kommentar">
+        <button type="submit">Legg til</button>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="cart" id="cart" hidden>
+  <div class="in">
+    <div class="sum"><b id="cSum"></b><span id="cMeta"></span></div>
+    <input id="cNote" type="text" placeholder="Merknad, valgfritt" autocomplete="off" aria-label="Merknad">
+    <label class="chk"><input id="cTent" type="checkbox"> Foreløpig</label>
+    <button class="cx" id="cCancel" type="button">Avbryt</button>
+    <button class="send" id="cBook" type="button">Book</button>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(function(){
+  const MONTHS=["januar","februar","mars","april","mai","juni","juli","august","september","oktober","november","desember"];
+  const DOW=["Man","Tir","Ons","Tor","Fre","Lør","Søn"];
+  const PAL=["--p1","--p2","--p3","--p4","--p5","--p6","--p7","--p8"];
+  const $=s=>document.querySelector(s);
+  const pad=n=>String(n).padStart(2,"0");
+  const iso=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+  const parse=s=>{const[a,b,c]=s.split("-").map(Number);return new Date(a,b-1,c)};
+  const addDays=(s,n)=>{const d=parse(s);d.setDate(d.getDate()+n);return iso(d)};
+  const diff=(a,b)=>Math.round((parse(b)-parse(a))/864e5);
+  const TODAY=iso(new Date());
+  const THISY=new Date().getFullYear();
+  const fmt=s=>{const d=parse(s);return d.getDate()+". "+MONTHS[d.getMonth()]+(d.getFullYear()!==THISY?" "+d.getFullYear():"")};
+  const esc=t=>String(t??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  let bookings=[],people=[],needs=[],armed=null,live=false,showAll=false;
+  let view=new Date();view.setDate(1);
+  const colorFor=n=>{let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))>>>0;return "var("+PAL[h%PAL.length]+")"};
+  const initials=n=>n.split(/[\s.]+/).filter(Boolean).map(w=>w[0]).join("").slice(0,2).toUpperCase();
+  const overlaps=(s,e)=>bookings.filter(b=>!(b.end<=s||b.start>=e));
+  function toast(t){const o=$("#toast");o.hidden=false;o.textContent=t;clearTimeout(toast.t);toast.t=setTimeout(()=>o.hidden=true,5000)}
+  function go(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"})}
+
+  /* in-page links: scroll by script so they also work when the page sits in an embedded frame */
+  document.addEventListener("click",e=>{
+    const o=e.target.closest("[data-open]");if(o){e.preventDefault();closeMenu();openView(o.dataset.open,o);return}
+    const a=e.target.closest('a[href^="#"]');if(!a)return;
+    const id=a.getAttribute("href").slice(1);if(!id)return;
+    e.preventDefault();closeMenu();go(id);
+  });
+
+  /* bar turns solid after the hero */
+  const bar=$("#bar");
+  function onScroll(){document.body.classList.toggle("solid",scrollY>($("#top").offsetHeight-90))}
+  addEventListener("scroll",onScroll,{passive:true});onScroll();
+
+  /* menu */
+  function openMenu(){$("#sheet").hidden=false;$("#menuBtn").setAttribute("aria-expanded","true");document.body.style.overflow="hidden";$("#closeBtn").focus()}
+  function closeMenu(){if($("#sheet").hidden)return;$("#sheet").hidden=true;$("#menuBtn").setAttribute("aria-expanded","false");document.body.style.overflow=""}
+  $("#menuBtn").addEventListener("click",openMenu);
+  $("#closeBtn").addEventListener("click",()=>{closeMenu();$("#menuBtn").focus()});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")closeMenu()});
+
+  /* praktisk: innhold i popup */
+  const INFO={
+    ankomst:{t:"Ankomst og nøkler",img:1,s:[["Nøkler",["Nøkler, nøkkelkort og parkeringskort hentes alltid på kontoret. Ta kontakt med Vilde.",'Bod nr. 51 i underetasjen. Nøkkelboks og kodelås har kode <span class="code">9999</span>.',"Det finnes ingen reservenøkkel. Legg alltid nøkkelen tilbake i nøkkelboksen."]],["Veien dit",["E6 forbi Lillehammer, ta av mot Gausdal, deretter mot Skei og Peer Gyntveien. Kjør forbi tre skilt til Skeikampen hotell.","Kjør til Skeikampen Booking og Skitorget. Parker på de reserverte plassene for Høyfjellstunet, bak Treffen Kafe.","Handle på Rema eller Kiwi ved Segalstad Bru, åpent til 23. Joker på Skeikampen er dyrere.","Last av fra kortsiden av bygget. Bager går via gang og heis, ski via utvendig trapp ned."]]]},
+    tamed:{t:"Ta med",s:[["",["Laken, sengesett og stort hotellputetrekk (100 x 70).","Dusjhåndklær, håndklær og badetøy til spa. Treningstøy.","Kjøkkenhåndklær, kluter og gjerne lys."]]]},
+    leilighet:{t:"Leiligheten",s:[["",["Hovedsoverom med dobbeltseng 180 cm. Soverom 2 med to køyesenger. Overkøyene har ingen kantbeskyttelse.","Vaskemaskin og tørketrommel. Internett via QR koden bak den nederste hvite luken i gangen.",'Spa, trening og spillerom bookes hos Treffen Cafe, <span class="code">902 52 590</span>, tast 1.',"Ro fra 23:00. Ingen sko på parketten. Ikke brenn kronelysene helt ned."]]]},
+    avreise:{t:"Avreise",s:[["",["Utsjekk 11:00. Bestill vask i god tid.","Tøm kjøleskapet. En øl eller vin til neste gjest er alltid hyggelig.","Søppel i de nedgravde containerne på parkeringsplassen.","Steng vann til oppvaskmaskin, lås terrassedøren og slå av utelys.","Rullegardiner ned på soverom, snømåker inn, saltobrikke og ekstra nøkkelkort på kjøkkenbenken.","Ta med skitne kjøkkenhåndklær til Oslo."]]]},
+    regler:{t:"Regler",s:[["",["Inntil 7 netter om gangen.","I høytider, vinterferie og høstferie maks 4 dager.","Vil flere ha samme ferie, blir det loddtrekning minst en måned før. De som ikke har hatt hytta i ferie tidligere, prioriteres.","Utsjekk 11:00. Neste gjest kan komme samme dag.","Du betaler kun for vask, 720 kr."]]]},
+    kontakt:{t:"Kontakter",html:'<div class="contact"><div class="h">Vask</div><p>Victoria Hundal, resepsjonssjef</p><p><a href="mailto:victoria.hundal@olavthon.no">victoria.hundal@olavthon.no</a></p><p><a href="tel:+4761285000">+47 612 85 000</a></p><div class="h">Nødkontakt med ekstranøkkel</div><p>Alexander Cimarolli</p><p><a href="tel:+4799559078">99 55 90 78</a></p><p><a href="mailto:alexander.cimarolli@olavthon.no">alexander.cimarolli@olavthon.no</a></p><div class="h">Adresse</div><p>Sanatorievegen 25A, 2652 Svingvoll</p><p>Leilighet C403, seksjon 51</p></div>'}
+  };
+  function renderInfo(k){
+    const it=INFO[k];if(!it)return false;
+    $("#infoTitle").textContent=it.t;
+    $("#infoBody").innerHTML=(it.img?'<div class="img" role="img" aria-label="Nystua på Skeikampen"></div>':'')+(it.html||it.s.map(([h,l])=>(h?'<h3>'+h+'</h3>':'')+'<ul>'+l.map(x=>'<li>'+x+'</li>').join("")+'</ul>').join(""));
+    return true;
+  }
+
+  /* status */
+  function renderNow(){
+    const here=bookings.filter(b=>b.start<=TODAY&&TODAY<b.end&&!b.tentative);
+    const next=bookings.filter(b=>b.start>TODAY).sort((a,b)=>a.start.localeCompare(b.start))[0];
+    const el=$("#now");el.className="status"+(here.length?" busy":"")+(live?"":" off");
+    el.innerHTML='<i></i><span>'+(here.length?"På hytta nå: "+esc(here.map(b=>b.name).join(" og ")):"Ledig i dag")+(next?". Neste: "+esc(next.name)+", "+fmt(next.start)+".":".")+'</span>';
+  }
+
+  /* lanes: hver booking får fast rad, så stolpene står på linje gjennom uken */
+  let lanes={},laneCount=1;
+  function assignLanes(){
+    lanes={};const ends=[];
+    [...bookings].sort((a,b)=>a.start.localeCompare(b.start)||b.end.localeCompare(a.end)).forEach(b=>{
+      let l=ends.findIndex(e=>e<=b.start);if(l<0){l=ends.length;ends.push("")}ends[l]=b.end;lanes[b.id]=l;
+    });
+    laneCount=Math.max(1,ends.length);
+  }
+  const nightsOn=s=>bookings.filter(b=>b.start<=s&&s<b.end);
+
+  /* calendar */
+  function monthHTML(y,m){
+    const off=(new Date(y,m,1).getDay()+6)%7,start=new Date(y,m,1-off);
+    let h='<div class="month"><h3>'+MONTHS[m][0].toUpperCase()+MONTHS[m].slice(1)+' '+y+'</h3><div class="grid">'+DOW.map(d=>'<div class="dow" aria-hidden="true">'+d+'</div>').join("");
+    for(let i=0;i<42;i++){
+      const d=new Date(start);d.setDate(start.getDate()+i);if(i>=35&&d.getMonth()!==m)break;
+      const s=iso(d),out=d.getMonth()!==m,dow=(d.getDay()+6)%7,cls=["day"];
+      if(out)cls.push("out");if(s===TODAY)cls.push("today");else if(s<TODAY)cls.push("past");
+      const on=nightsOn(s),free=!out&&s>=TODAY&&!on.length;if(free)cls.push("free");
+      if(!out&&selStart){if(s===selStart)cls.push("ss");else if(selEnd&&s===selEnd)cls.push("se");else if(selEnd&&s>selStart&&s<selEnd)cls.push("sm")}
+      const used=Math.max(0,...on.map(b=>lanes[b.id]+1));
+      let segs="";
+      for(let l=0;l<Math.max(used,on.length?1:0);l++){
+        const b=on.find(x=>lanes[x.id]===l);
+        if(!b){segs+='<div class="gap"></div>';continue}
+        const st=s===b.start,en=addDays(s,1)===b.end,c=colorFor(b.name);
+        let lb="";
+        if(st||dow===0){const span=Math.min(diff(s,b.end),7-dow);lb='<span class="lb" style="max-width:calc('+span*100+'% + '+(span-1)*4+'px - 14px)">'+esc(b.name)+'</span>'}
+        segs+='<div class="seg'+(st?' st':'')+(en?' en':'')+(dow===6&&!en?' wk':'')+(b.tentative?' t':'')+'" style="background:'+c+'">'+lb+'</div>';
+      }
+      const label=d.getDate()+". "+MONTHS[d.getMonth()]+(on.length?", "+on.map(b=>b.name+(b.tentative?" foreløpig":"")).join(", "):", ledig");
+      const click=!out&&s>=TODAY;
+      h+=click?'<button type="button" class="'+cls.join(" ")+'" data-day="'+s+'" aria-label="'+esc(label)+(free?'. Velg':'. Vis opphold')+'"><span class="d num">'+d.getDate()+'</span>'+segs+'</button>'
+              :'<div class="'+cls.join(" ")+'"'+(out?' aria-hidden="true"':' role="img" aria-label="'+esc(label)+'"')+'><span class="d num">'+d.getDate()+'</span>'+segs+'</div>';
+    }
+    return h+'</div></div>';
+  }
+  function renderCal(){const y=view.getFullYear(),m=view.getMonth(),n=new Date(y,m+1,1);$("#months").innerHTML=monthHTML(y,m)+monthHTML(n.getFullYear(),n.getMonth())}
+  $("#prev").onclick=()=>{view.setMonth(view.getMonth()-1);renderCal()};
+  $("#next").onclick=()=>{view.setMonth(view.getMonth()+1);renderCal()};
+  $("#todayBtn").onclick=()=>{view=new Date();view.setDate(1);renderCal()};
+  $("#months").addEventListener("click",e=>{const b=e.target.closest("[data-day]");if(b)pick(b.dataset.day,b)});
+  $("#months").addEventListener("mouseover",e=>{
+    if(!selStart||selEnd)return;const b=e.target.closest("[data-day]");const t=b&&b.dataset.day;
+    document.querySelectorAll("#months .pv").forEach(x=>x.classList.remove("pv"));
+    if(!t||t<=selStart||!rangeFree(selStart,t))return;
+    document.querySelectorAll("#months [data-day]").forEach(x=>{const d=x.dataset.day;if(d>selStart&&d<=t)x.classList.add("pv")});
+  });
+
+  /* dialog */
+  let opener=null;
+  const VIEWS={det:"vDet",info:"vInfo",all:"vAll",hist:"vHist",needs:"vNeeds"};
+  function openDlg(which,from){
+    opener=from||document.activeElement;
+    document.querySelectorAll("#pane .view").forEach(v=>v.hidden=v.id!==VIEWS[which]);
+    $("#pane").classList.toggle("wide",which==="hist");
+    $("#pane").setAttribute("aria-labelledby",which==="info"?"infoTitle":which==="det"?"detTitle":"dlgTitle");
+    $("#pane").scrollTop=0;
+    const d=$("#dlg");d.hidden=false;document.body.style.overflow="hidden";
+    requestAnimationFrame(()=>d.classList.add("open"));
+  }
+  function closeDlg(){
+    const d=$("#dlg");if(d.hidden)return;d.classList.remove("open");document.body.style.overflow="";armed=null;
+    setTimeout(()=>{d.hidden=true},200);
+    if(opener&&document.contains(opener))opener.focus({preventScroll:true});
+  }
+  function openView(v,from){
+    const [w,k]=v.split(":");
+    if(w==="info"){if(!renderInfo(k))return}
+    else if(w==="all")renderAllList();
+    else if(w==="hist")renderHistory();
+    else if(w==="needs")renderNeeds();
+    openDlg(w,from);
+    setTimeout(()=>$("#dlgClose").focus({preventScroll:true}),40);
+  }
+  $("#dlgClose").onclick=closeDlg;
+  $("#dlg").addEventListener("click",e=>{if(e.target.id==="dlg")closeDlg()});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDlg()});
+
+  /* booking: velg hvem, så ankomst og avreise */
+  let selStart=null,selEnd=null;
+  const rangeFree=(a,b)=>!bookings.some(x=>x.start<b&&x.end>a);
+  const store={get(){try{return localStorage.getItem("hb-who")||""}catch(e){return ""}},set(v){try{localStorage.setItem("hb-who",v)}catch(e){}}};
+  function renderPeople(){
+    const sel=$("#who"),cur=sel.value||store.get();
+    sel.innerHTML='<option value="">Velg navn</option>'+people.map(p=>'<option>'+esc(p)+'</option>').join("")+'<option value="__new">Ny person</option>';
+    if(cur&&(people.includes(cur)||cur==="__new"))sel.value=cur;
+  }
+  const whoName=()=>{const v=$("#who").value;return v==="__new"?$("#whoNew").value.trim():v};
+  $("#who").addEventListener("change",()=>{const v=$("#who").value;$("#whoNew").hidden=v!=="__new";$("#whoRow").classList.remove("need");if(v==="__new")$("#whoNew").focus();else if(v)store.set(v);renderCart()});
+  $("#whoNew").addEventListener("input",()=>{$("#whoRow").classList.remove("need");renderCart()});
+  function hint(t){$("#hint").textContent=t}
+  function pick(s,el){
+    const busyNight=nightsOn(s).length>0;
+    if(selStart&&!selEnd&&s>selStart){
+      if(rangeFree(selStart,s)){selEnd=s;renderCal();renderCart();return}
+      toast("Noen har booket i perioden. Velg en tidligere avreise.");
+      if(busyNight)return;
+    }
+    if(busyNight){openDetails(s,el);return}
+    if(selStart===s&&!selEnd){clearSel();return}
+    selStart=s;selEnd=null;renderCal();renderCart();
+  }
+  function clearSel(){selStart=selEnd=null;renderCal();renderCart()}
+  function renderCart(){
+    const c=$("#cart");
+    if(!selStart){hint("Trykk på ankomstdagen.");c.classList.remove("on");document.body.classList.remove("carting");setTimeout(()=>{if(!selStart)c.hidden=true},230);return}
+    c.hidden=false;requestAnimationFrame(()=>{if(selStart)c.classList.add("on")});document.body.classList.add("carting");
+    const name=whoName();
+    if(!selEnd){
+      hint("Ankomst "+fmt(selStart)+". Trykk på avreisedagen.");
+      $("#cSum").textContent=(name?name+", ":"")+"ankomst "+fmt(selStart);
+      $("#cMeta").className="";$("#cMeta").textContent="Velg avreise i kalenderen";$("#cBook").disabled=true;return;
+    }
+    const n=diff(selStart,selEnd);hint("");
+    $("#cSum").textContent=(name?name+", ":"")+fmt(selStart)+" til "+fmt(selEnd);
+    const long=n>7;$("#cMeta").className=long?"warn":"";
+    $("#cMeta").textContent=n+(n===1?" natt":" netter")+(long?". Reglene sier inntil 7 dager.":"")+(name?"":". Velg hvem som booker over kalenderen.");
+    $("#cBook").disabled=!live;
+  }
+  $("#cCancel").onclick=clearSel;
+  $("#cBook").onclick=async()=>{
+    const name=whoName();
+    if(!name){$("#whoRow").classList.add("need");go("kalender");setTimeout(()=>($("#who").value==="__new"?$("#whoNew"):$("#who")).focus({preventScroll:true}),400);toast("Velg hvem som booker.");return}
+    if(!selStart||!selEnd)return;
+    if(!rangeFree(selStart,selEnd)){toast("Noen har booket i perioden. Velg andre datoer.");clearSel();return}
+    const btn=$("#cBook");btn.disabled=true;btn.textContent="Lagrer";
+    const s=selStart,e=selEnd;
+    try{
+      await api({action:"book",name,start:s,end:e,note:$("#cNote").value.trim(),tentative:$("#cTent").checked});
+      store.set(name);$("#cNote").value="";$("#cTent").checked=false;
+      if($("#who").value==="__new"){$("#who").value=name;$("#whoNew").hidden=true;$("#whoNew").value=""}
+      selStart=selEnd=null;renderCal();renderCart();
+      toast("Booket. "+name+", "+fmt(s)+" til "+fmt(e)+".");
+    }catch(err){toast("Kunne ikke lagre. Sjekk nettet og prøv igjen.")}
+    finally{btn.textContent="Book";renderCart()}
+  };
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#dlg").hidden&&selStart)clearSel()});
+
+  /* details */
+  let detDay=null;
+  function openDetails(s,from){detDay=s;renderDetails();openDlg("det",from)}
+  function renderDetails(){
+    const on=nightsOn(detDay);
+    if(!on.length){closeDlg();return}
+    $("#detTitle").textContent=on.length>1?"Opphold":on[0].name;
+    $("#detSub").textContent="Natt til "+fmt(addDays(detDay,1)).replace(/ \d{4}$/,"")+(on.length>1?", "+on.length+" bookinger":"");
+    $("#detList").innerHTML=on.map(b=>{const n=diff(b.start,b.end);return '<div class="row"><span class="dot" style="background:'+colorFor(b.name)+'"></span><div><div class="nm">'+esc(b.name)+(b.tentative?' <span class="tag2">Foreløpig</span>':'')+'</div><div class="meta num">'+fmt(b.start)+' til '+fmt(b.end)+', '+n+(n===1?' natt':' netter')+(b.note?'. '+esc(b.note):'')+'</div></div><div class="acts">'+(b.tentative?'<button class="act" type="button" data-confirm="'+esc(b.id)+'">Bekreft</button>':'')+'<button class="act del'+(armed===b.id?' armed':'')+'" type="button" data-del="'+esc(b.id)+'">'+(armed===b.id?'Bekreft sletting':'Slett')+'</button></div></div>'}).join("");
+    const last=on.map(b=>b.end).sort().pop(),freeAfter=!nightsOn(last).length;
+    const db=$("#detBook");db.hidden=!freeAfter;db.dataset.day=last;db.textContent="Book fra "+fmt(last);
+  }
+  $("#detBook").onclick=e=>{const s=e.currentTarget.dataset.day;closeDlg();selStart=s;selEnd=null;renderCal();renderCart();hint("Ankomst "+fmt(s)+". Trykk på avreisedagen.")};
+  async function onAct(e,after){
+    const del=e.target.closest("[data-del]"),cf=e.target.closest("[data-confirm]");if(!(del||cf)||!live)return;
+    try{
+      if(del){const id=del.dataset.del;if(armed!==id){armed=id;after();setTimeout(()=>{if(armed===id){armed=null;after()}},5000);return}armed=null;await api({action:"delete",id});toast("Bookingen er slettet.")}
+      if(cf){await api({action:"confirm",id:cf.dataset.confirm});toast("Bookingen er bekreftet.")}
+    }catch(err){toast("Kunne ikke lagre endringen. Prøv igjen.")}
+  }
+  $("#detList").addEventListener("click",e=>onAct(e,renderDetails));
+
+  /* historikk: tidligere opphold, foreløpige telles ikke */
+  const MS=["jan","feb","mar","apr","mai","jun","jul","aug","sep","okt","nov","des"];
+  const short=s=>{const d=parse(s);return d.getDate()+". "+MS[d.getMonth()]+" "+d.getFullYear()};
+  let hView="p",hYear="",hSort={k:"nights",dir:-1},hShow=30;
+  function renderHistory(){
+    const past=bookings.filter(b=>b.start<TODAY&&!b.tentative);
+    const years=[...new Set(past.map(b=>b.start.slice(0,4)))].sort().reverse();
+    const ys=$("#hYear");if(ys.options.length!==years.length+1){ys.innerHTML='<option value="">Alle år</option>'+years.map(y=>'<option>'+y+'</option>').join("");ys.value=years.includes(hYear)?hYear:""}
+    const list=past.filter(b=>!hYear||b.start.startsWith(hYear));
+    const nights=list.reduce((a,b)=>a+Math.min(diff(b.start,b.end),diff(b.start,TODAY)),0);
+    $("#histTeaser").textContent=past.length+" opphold siden 2020";
+    $("#hTot").textContent=list.length?list.length+" opphold, "+nights+" netter"+(hYear?" i "+hYear:" siden 2020"):"";
+    document.querySelectorAll("[data-hv]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.hv===hView));
+    if(!list.length){$("#hBody").innerHTML='<div class="empty">Ingen opphold'+(hYear?' i '+hYear:'')+'.</div>';$("#hMore").hidden=true;return}
+    if(hView==="p"){
+      const m={};
+      list.forEach(b=>{const p=m[b.name]||(m[b.name]={name:b.name,stays:0,nights:0,last:""});p.stays++;p.nights+=Math.min(diff(b.start,b.end),diff(b.start,TODAY));if(b.start>p.last)p.last=b.start});
+      let rows=Object.values(m);
+      if(!hYear)people.filter(p=>!m[p]).forEach(p=>rows.push({name:p,stays:0,nights:0,last:""}));
+      const k=hSort.k,dir=hSort.dir;
+      rows.sort((a,b)=>k==="name"?a.name.localeCompare(b.name,"nb")*dir:((a[k]>b[k]?1:a[k]<b[k]?-1:0)*dir)||a.name.localeCompare(b.name,"nb"));
+      const max=Math.max(...rows.map(r=>r.nights),1);
+      const th=(key,label,cls)=>'<th class="'+(cls||"")+'"><button type="button" data-hs="'+key+'"'+(hSort.k===key?' aria-sort="'+(hSort.dir>0?"ascending":"descending")+'"':'')+'>'+label+'</button></th>';
+      $("#hBody").innerHTML='<table class="ptab"><thead><tr>'+th("name","Navn")+th("stays","Opphold","r")+th("nights","Netter","r")+th("last","Sist på hytta","r")+'</tr></thead><tbody>'+
+        rows.map(r=>'<tr'+(r.stays?'':' class="none"')+'><td class="n"><span class="dot" style="background:'+colorFor(r.name)+'"></span>'+esc(r.name)+'<span class="pbar"><i style="width:'+Math.round(r.nights/max*100)+'%"></i></span></td><td class="r">'+r.stays+'</td><td class="r">'+r.nights+'</td><td class="r">'+(r.last?short(r.last):'Aldri')+'</td></tr>').join("")+'</tbody></table>';
+      $("#hMore").hidden=true;
+    }else{
+      const sorted=[...list].sort((a,b)=>b.start.localeCompare(a.start)),shown=sorted.slice(0,hShow);
+      let h="",y="";
+      shown.forEach(b=>{const yy=b.start.slice(0,4);if(yy!==y){y=yy;h+='<h3 class="yr">'+yy+'</h3>'}const n=Math.min(diff(b.start,b.end),diff(b.start,TODAY));
+        h+='<div class="hrow"><span class="dot" style="background:'+colorFor(b.name)+'"></span><div class="nm">'+esc(b.name)+'</div><div class="when num">'+fmt(b.start).replace(/ \d{4}$/,"")+' til '+fmt(b.end).replace(/ \d{4}$/,"")+'</div><div class="r num">'+n+(n===1?' natt':' netter')+'</div></div>'});
+      $("#hBody").innerHTML='<div class="hlist">'+h+'</div>';
+      $("#hMore").hidden=sorted.length<=hShow;
+    }
+  }
+  document.querySelector(".seg2").addEventListener("click",e=>{const b=e.target.closest("[data-hv]");if(b){hView=b.dataset.hv;hShow=30;renderHistory()}});
+  $("#hYear").addEventListener("change",e=>{hYear=e.target.value;hShow=30;renderHistory()});
+  $("#hBody").addEventListener("click",e=>{const b=e.target.closest("[data-hs]");if(!b)return;const k=b.dataset.hs;hSort=hSort.k===k?{k,dir:-hSort.dir}:{k,dir:k==="name"?1:-1};renderHistory()});
+  $("#hMore").onclick=()=>{hShow+=50;renderHistory()};
+
+  /* kommende opphold: tre på siden, alle i popup */
+  const upList=()=>bookings.filter(b=>b.end>TODAY).sort((a,b)=>a.start.localeCompare(b.start));
+  function renderUpcoming(){
+    const list=upList();
+    $("#allBtn").hidden=list.length<=3;$("#allBtn").textContent="Se alle "+list.length;
+    if(!list.length){$("#upcoming").innerHTML='<div class="empty">Ingen kommende opphold ennå. Bli den første.</div>';return}
+    $("#upcoming").innerHTML=list.slice(0,3).map(b=>{const n=diff(b.start,b.end);
+      return '<button type="button" data-stay="'+esc(b.start)+'"><span class="dot" style="background:'+colorFor(b.name)+'"></span><b>'+esc(b.name)+(b.tentative?'<span class="tag2">Foreløpig</span>':'')+'</b><span class="w num">'+fmt(b.start)+' til '+fmt(b.end)+', '+n+(n===1?' natt':' netter')+'</span></button>'}).join("");
+  }
+  $("#upcoming").addEventListener("click",e=>{const b=e.target.closest("[data-stay]");if(b)openDetails(b.dataset.stay,b)});
+  function renderAllList(){
+    const list=upList();
+    $("#allSub").textContent=list.length?list.length+" opphold framover":"";
+    if(!list.length){$("#allList").innerHTML='<div class="empty">Ingen kommende opphold.</div>';return}
+    $("#allList").innerHTML=list.map(b=>{
+      const n=diff(b.start,b.end),conf=list.some(o=>o!==b&&!(o.end<=b.start||o.start>=b.end));
+      const tags=(b.tentative?'<span class="tag2">Foreløpig</span>':'')+(conf?'<span class="tag2 bad">Kolliderer</span>':'');
+      return '<div class="stay"><span class="dot" style="background:'+colorFor(b.name)+'"></span>'+
+        '<div class="nm">'+esc(b.name)+(tags?'<span class="tags">'+tags+'</span>':'')+'</div>'+
+        '<div><div class="when num">'+fmt(b.start)+' til '+fmt(b.end)+'</div><div class="meta">'+n+(n===1?' natt':' netter')+(b.note?', '+esc(b.note):'')+'</div></div>'+
+        (live?'<div class="acts">'+(b.tentative?'<button class="act" type="button" data-confirm="'+esc(b.id)+'">Bekreft</button>':'')+'<button class="act del'+(armed===b.id?' armed':'')+'" type="button" data-del="'+esc(b.id)+'" aria-label="'+(armed===b.id?'Bekreft sletting av ':'Slett ')+esc(b.name)+', '+fmt(b.start)+'">'+(armed===b.id?'Bekreft sletting':'Slett')+'</button></div>':'<div></div>')+'</div>';
+    }).join("");
+  }
+  $("#allList").addEventListener("click",e=>onAct(e,renderAllList));
+
+  /* needs */
+  function renderNeeds(){
+    const open=needs.filter(n=>!n.done).length;$("#needsTeaser").textContent=open?open+(open===1?" ting står":" ting står")+" på listen":"Ingenting mangler nå";
+    if(!needs.length){$("#needs").innerHTML='<div class="empty">'+(live?'Listen er tom.':'Listen vises når siden har kontakt.')+'</div>';return}
+    const list=[...needs].sort((a,b)=>(a.done-b.done)||String(a.text).localeCompare(String(b.text),"nb"));
+    $("#needs").innerHTML=list.map(n=>'<div class="need'+(n.done?' done':'')+'"><input type="checkbox" id="nd-'+esc(n.id)+'" data-tog="'+esc(n.id)+'"'+(n.done?' checked':'')+(live?'':' disabled')+'><label for="nd-'+esc(n.id)+'"><span class="t">'+esc(n.text)+'</span>'+(n.comment?'<span class="c">'+esc(n.comment)+'</span>':'')+'</label>'+(live?'<button class="x" type="button" data-ndel="'+esc(n.id)+'" aria-label="Fjern '+esc(n.text)+'">Fjern</button>':'<span></span>')+'</div>').join("");
+  }
+  $("#needs").addEventListener("change",async e=>{const t=e.target.closest("[data-tog]");if(!t||!live)return;try{await api({action:"need-toggle",id:t.dataset.tog,done:t.checked})}catch(err){toast("Kunne ikke lagre. Prøv igjen.")}});
+  $("#needs").addEventListener("click",async e=>{const t=e.target.closest("[data-ndel]");if(!t||!live)return;try{await api({action:"need-delete",id:t.dataset.ndel});toast("Fjernet fra listen.")}catch(err){toast("Kunne ikke fjerne. Prøv igjen.")}});
+  $("#nform").addEventListener("submit",async e=>{e.preventDefault();const text=$("#n-text").value.trim();if(!text){$("#n-text").focus();return}if(!live){toast("Får ikke kontakt. Prøv igjen.");return}try{await api({action:"need-add",text,comment:$("#n-comment").value.trim()});$("#n-text").value="";$("#n-comment").value="";toast("Lagt til.")}catch(err){toast("Kunne ikke lagre. Prøv igjen.")}});
+
+  function renderAll(){assignLanes();if(selStart&&selEnd&&!rangeFree(selStart,selEnd))selEnd=null;renderNow();renderCal();renderUpcoming();renderHistory();renderCart();if(!$("#dlg").hidden){if(!$("#vDet").hidden)renderDetails();if(!$("#vAll").hidden)renderAllList()}}
+
+  /* data: én felles kilde på serveren */
+  function apply(d){
+    bookings=(d.bookings||[]).filter(b=>b.start&&b.end);people=d.people||[];needs=d.needs||[];
+    if(!live){live=true;$("#notice").hidden=true;$("#nform button").disabled=false}
+    renderPeople();renderAll();renderNeeds();
+  }
+  function offline(){
+    if(live){live=false;renderUpcoming();renderNeeds()}
+    $("#notice").hidden=false;$("#nform button").disabled=true;renderNow();renderCart();
+  }
+  async function api(body){
+    const r=await fetch("/intern/hyttebooking/api",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    if(!r.ok)throw new Error("save");apply(await r.json());
+  }
+  let busy=false;
+  async function load(){
+    if(busy||document.hidden)return;busy=true;
+    try{const r=await fetch("/intern/hyttebooking/api",{cache:"no-store"});if(!r.ok)throw 0;apply(await r.json())}catch(e){offline()}finally{busy=false}
+  }
+  renderCal();renderPeople();renderNeeds();
+  load();setInterval(load,20000);
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden)load()});
+})();
+</script>
+
+</body></html>

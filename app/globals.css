@@ -1,6 +1,6 @@
 /*
-  Monns fonter. Legg filene i public/fonts og de tas i bruk automatisk.
-  Mangler filene, brukes en rolig serif som ligner.
+  Monns fonter. Fellix ligger i public/fonts. Nyght Serif tas i bruk
+  automatisk når filene legges i public/fonts. Mangler de, brukes en rolig serif som ligner.
 */
 @font-face {
   font-family: "Nyght Serif";
@@ -17,9 +17,16 @@
   font-display: swap;
 }
 @font-face {
-  font-family: "Felix";
-  src: url("/fonts/Felix.woff2") format("woff2");
+  font-family: "Fellix";
+  src: url("/fonts/Fellix-Regular.otf") format("opentype");
   font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fellix";
+  src: url("/fonts/Fellix-Medium.otf") format("opentype");
+  font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
@@ -35,8 +42,8 @@
   --aksent: #2f4a3a;
 
   --serif: "Nyght Serif", "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
-  --display: "Felix", "Nyght Serif", Georgia, serif;
-  --sans: "Inter", -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --display: "Nyght Serif", "Cormorant Garamond", Georgia, serif;
+  --sans: "Fellix", -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
 
   --maks: 1120px;
   --kant: clamp(20px, 5vw, 64px);
