@@ -60,11 +60,6 @@ export const kunder: Kunde[] = [
         navn: "Tryvannstårnet",
         beskrivelse: "3D snitt, film og plantegninger",
       },
-      {
-        slug: "markedsgata",
-        navn: "Markedsgata, Mack Kvartalet",
-        beskrivelse: "Ledige kontor med planløsninger i 3D",
-      },
     ],
   },
   {
