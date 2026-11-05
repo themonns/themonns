@@ -10,7 +10,8 @@ themonns.no
 │   ├── osloairport
 │   └── resepsjon
 ├── eiendomsspar/              passord Eiendomsspar
-│   └── tryvannstarnet
+│   ├── tryvannstarnet
+│   └── markedsgata
 └── vikaeiendomsforvaltning/   passord Vika
     └── kirkegata
 ```
@@ -65,6 +66,7 @@ Vercel viser de nøyaktige verdiene under Settings, Domains når du legger til `
 | `/vikaeiendomsforvaltning` | themonns/kirkegata15 (forsiden med alle eiendommene) | Ingen |
 | `/vikaeiendomsforvaltning/kirkegata` | themonns/kirkegata15 | Ingen |
 | `/eiendomsspar/tryvannstarnet` | themonns/tryvann | Ingen |
+| `/eiendomsspar/markedsgata` | Markedsgata, Mack Kvartalet (modell med planløsninger) | Ingen |
 
 Vika, Kirkegata og Tryvann er statiske nettsteder som ligger urørt i `public/<kunde>/<prosjekt>/`. Forsiden deres heter `_index.html` (ikke `index.html`, ellers går den utenom tilgangen) og serveres av `app/<kunde>/<prosjekt>/route.ts`. Alle mappeadresser ender med skråstrek (`trailingSlash` i `next.config.ts`), så de relative stiene i sidene virker.
 

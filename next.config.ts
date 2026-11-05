@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
     "/vikaeiendomsforvaltning": ["./public/vikaeiendomsforvaltning/_index.html"],
     "/vikaeiendomsforvaltning/kirkegata": ["./public/vikaeiendomsforvaltning/kirkegata/_index.html"],
     "/eiendomsspar/tryvannstarnet": ["./public/eiendomsspar/tryvannstarnet/_index.html"],
+    "/eiendomsspar/markedsgata": ["./public/eiendomsspar/markedsgata/_index.html"],
   },
   headers: async () => [
     {
